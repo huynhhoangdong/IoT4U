@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@android:color/holo_green_light"
+        android:textColor="@android:color/white"
+        android:text="CONNECTION INSTRUCTION"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/Connection_Instruction"/>
+    <Button
+        android:id="@+id/btnGetWifiList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_blue_bright"
+        android:text="GET WIFI LIST"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@android:color/holo_green_light"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp"
+        android:text="WIFI SETTINGS"/>
+
+    <!--<EditText-->
+        <!--android:id="@+id/edtWifiSSID"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="SSID"/>-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:text="WIFI's Name"/>
+    <Spinner
+        android:id="@+id/spnWifiSSID"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"></Spinner>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:text="Password"/>
+    <EditText
+        android:id="@+id/edtWifiPASS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="PASS"/>
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_blue_bright"
+        android:text="SEND"/>
+    <TextView
+        android:id="@+id/tvShow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Details"/>
+
+</LinearLayout>

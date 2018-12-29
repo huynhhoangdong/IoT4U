@@ -1,0 +1,1 @@
+include ':app', ':aws-android-sdk-mobile-client-2.9.1'

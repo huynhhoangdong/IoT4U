@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">IoT4U</string>
+    <string name="navigation_drawer_open">Open Navigation Drawer</string>
+    <string name="navigation_drawer_close">Close Navigation Drawer</string>
+    <string name="Connection_Instruction">Please open you wifi settings and connect with wifi ESP8266_SSID. After that, come back to the APP and press GET WIFI LIST button</string>
+
+</resources>

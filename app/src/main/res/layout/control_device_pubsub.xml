@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    >
+
+    <TextView
+        android:id="@+id/tvClientId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Client ID: "
+
+
+        />
+
+    <EditText
+        android:id="@+id/edtClientId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tvClientId"
+        android:hint="Client ID"
+        android:layout_alignParentLeft="@+id/tvClientId"/>
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtClientId"
+        android:text="Status: "
+        />
+
+    <EditText
+        android:id="@+id/edtStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtClientId"
+        android:layout_toRightOf="@+id/tvStatus"
+        android:hint="Status"
+        android:layout_alignParentLeft="@+id/tvStatus"/>
+
+    <Button
+        android:id="@+id/btnConnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtStatus"
+
+        android:text="CONNECT" />
+
+    <Button
+        android:id="@+id/btnDisconnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtStatus"
+        android:layout_toRightOf="@id/btnConnect"
+        android:text="DISCONNECT" />
+
+    <Button
+        android:id="@+id/btnSubscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnConnect"
+        android:text="SUBSCRIBE: " />
+
+    <EditText
+        android:id="@+id/edtSubTopic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnConnect"
+        android:layout_toRightOf="@+id/btnSubscribe" />
+
+    <EditText
+        android:id="@+id/edtReceiveMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnSubscribe"
+        android:hint="Received Message"/>
+
+    <Button
+        android:id="@+id/btnPublish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtReceiveMessage"
+        android:text="PUBLISH: " />
+
+    <EditText
+        android:id="@+id/edtPubTopic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edtReceiveMessage"
+        android:layout_toRightOf="@+id/btnPublish" />
+
+    <EditText
+        android:id="@+id/edtPublishMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnPublish"
+        android:hint="Publish Message"/>
+    
+    <LinearLayout
+        android:layout_below="@id/edtPublishMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnOFF"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OFF"/>
+        <Button
+            android:id="@+id/btnRED"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RED"/>
+        <Button
+            android:id="@+id/btnGREEN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GREEN"/>
+        <Button
+            android:id="@+id/btnBLUE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BLUE"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
