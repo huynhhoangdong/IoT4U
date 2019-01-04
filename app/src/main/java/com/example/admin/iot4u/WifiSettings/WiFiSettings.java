@@ -176,7 +176,7 @@ public class WiFiSettings extends Activity {
                     cmd = readJson.getString("CMD");
                     if (cmd.equals("WIFI_CONNECTION_RESULT")) {
                         result = readJson.getString("RESULT");
-                        if (result.equals("OK")) {
+                            if (result.equals("OK")) {
                             Toast.makeText(WiFiSettings.this, "WIFI OK", Toast.LENGTH_SHORT).show();
                             deviceInfor = new DeviceInfor("IOT4U", mac, udid);
                             dbDeviceInfor.addDevice(deviceInfor);

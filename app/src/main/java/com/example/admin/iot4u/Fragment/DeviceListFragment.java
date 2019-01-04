@@ -60,6 +60,17 @@ public class DeviceListFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        updateRecyclerView();
+    }
+
+    private void updateRecyclerView(){
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getActivity(),
                 LinearLayoutManager.VERTICAL,false);
 
@@ -67,12 +78,10 @@ public class DeviceListFragment extends Fragment {
 
 
         recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+
         recyclerView.setLayoutManager(layoutManager);
 
         RecyclerView.ItemDecoration decoration = new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(decoration);
-
-
     }
 }

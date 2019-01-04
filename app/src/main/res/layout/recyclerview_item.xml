@@ -23,4 +23,5 @@
         android:layout_below="@+id/tvDeviceName"
         android:layout_toRightOf="@+id/imgDevice" />
 
+
 </RelativeLayout>

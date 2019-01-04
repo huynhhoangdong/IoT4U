@@ -3,6 +3,8 @@ package com.example.admin.iot4u;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new DeviceListFragment()).commit();
+                    new DeviceListFragment(), "Dong").commit();
             navigationView.setCheckedItem(R.id.nav_deviceList);
         }
     }
@@ -105,5 +107,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment frag = getSupportFragmentManager().findFragmentByTag("Dong");
+        if(frag != null)
+        ft.detach(frag).attach(frag).commit();
     }
 }
