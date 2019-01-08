@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/deviceItem"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/deviceItem">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/imgDevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"/>
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/tvDeviceName"
@@ -22,6 +22,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvDeviceName"
         android:layout_toRightOf="@+id/imgDevice" />
+
+    <ImageView
+        android:id="@+id/btn_delete_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_delete_green"
+        android:layout_alignParentRight="true"
+        android:paddingRight="10dp"/>
+
+    <ImageView
+        android:id="@+id/btn_edit_item"
+        android:layout_toLeftOf="@+id/btn_delete_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_edit_green"
+        android:paddingRight="10dp"/>
 
 
 </RelativeLayout>

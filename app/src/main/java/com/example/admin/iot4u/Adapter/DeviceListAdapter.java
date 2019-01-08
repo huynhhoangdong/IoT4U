@@ -1,15 +1,21 @@
 package com.example.admin.iot4u.Adapter;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.admin.iot4u.Database.DBDeviceInfor;
 import com.example.admin.iot4u.MQTT.ControlDevicePubSub;
 import com.example.admin.iot4u.Database.DeviceInfor;
 import com.example.admin.iot4u.R;
@@ -20,7 +26,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
 
     public Context rContext;
     public List<DeviceInfor> deviceInfors;
-
+    DeviceInfor deviceInfor;
     public DeviceListAdapter(Context rContext, List<DeviceInfor> deviceInfors) {
         this.rContext = rContext;
         this.deviceInfors = deviceInfors;
@@ -45,6 +51,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         viewHolder.tvDeviceMac.setText(deviceInfor.deviceMac.toString());
 
 
+
     }
 
     @Override
@@ -56,29 +63,73 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         return deviceInfors.get(adapterPosition);
 
     }
+
+
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView tvDeviceName;
         public TextView tvDeviceMac;
+        public ImageView deleteItem;
+        public ImageView editItem;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvDeviceName = itemView.findViewById(R.id.tvDeviceName);
-            tvDeviceMac = itemView.findViewById(R.id.tvDeviceMAC);
-            itemView.setOnClickListener(this);
+            tvDeviceMac  = itemView.findViewById(R.id.tvDeviceMAC);
+            deleteItem   = itemView.findViewById(R.id.btn_delete_item);
+            editItem     = itemView.findViewById(R.id.btn_edit_item);
+            tvDeviceName.setOnClickListener(this);
+            deleteItem.setOnClickListener(this);
+            editItem.setOnClickListener(this);
 
         }
 
         @Override
         public void onClick(View v) {
-            DeviceInfor deviceInfor = getDeviceIinfor(getAdapterPosition());
-            Toast.makeText(v.getContext(), "ViewHolder Item", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(v.getContext(), ControlDevicePubSub.class);
-            intent.putExtra("Name", deviceInfor.deviceName.toString());
-            intent.putExtra("Mac",deviceInfor.deviceMac.toString());
-            intent.putExtra("UDID",deviceInfor.getDeviceUdid());
-            v.getContext().startActivity(intent);
+            deviceInfor = getDeviceIinfor(getAdapterPosition());
+            switch (v.getId()){
+                case R.id.tvDeviceName:
+
+                    Toast.makeText(v.getContext(), "ViewHolder Item", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(v.getContext(), ControlDevicePubSub.class);
+                    intent.putExtra("Name", deviceInfor.deviceName.toString());
+                    intent.putExtra("Mac",deviceInfor.deviceMac.toString());
+                    intent.putExtra("UDID",deviceInfor.getDeviceUdid());
+                    v.getContext().startActivity(intent);
+                    break;
+
+                case R.id.btn_delete_item:
+                    Toast.makeText(rContext, "Delete Item", Toast.LENGTH_SHORT).show();
+                    AlertDialog.Builder alertDialog = new AlertDialog.Builder(rContext);
+                    alertDialog.setTitle(deviceInfor.deviceName.toString());
+                    alertDialog.setMessage(deviceInfor.deviceMac.toString());
+                    alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(rContext, "Delete Item YES", Toast.LENGTH_SHORT).show();
+                            DBDeviceInfor.getInstance(rContext).deleteDevice(deviceInfor);
+                        }
+                    });
+                    alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // DO SOMETHING HERE
+                            Toast.makeText(rContext, "Delete Item NO", Toast.LENGTH_SHORT).show();
+                            dialog.cancel();
+                        }
+                    });
+
+                    AlertDialog dialog = alertDialog.create();
+                    dialog.show();
+                    break;
+                case R.id.btn_edit_item:
+                    Toast.makeText(rContext, "Edit Item", Toast.LENGTH_SHORT).show();
+                    break;
+
+            }
+
 
         }
     }

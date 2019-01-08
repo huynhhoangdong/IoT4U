@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.admin.iot4u.Adapter.DeviceListAdapter;
 import com.example.admin.iot4u.Database.DBDeviceInfor;
@@ -48,8 +49,8 @@ public class DeviceListFragment extends Fragment {
 //            deviceInforList.add(deviceInfor);
 //        }
 
-        deviceInforList = dbDeviceInfor.getAllDevice();
 
+        Toast.makeText(getContext(), "Fragment on View Created", Toast.LENGTH_SHORT).show();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +66,16 @@ public class DeviceListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Toast.makeText(getContext(), "Fragment on Resume", Toast.LENGTH_SHORT).show();
+        deviceInforList = dbDeviceInfor.getAllDevice();
+        updateRecyclerView();
+    }
 
+    @Override
+    public void onPause() {
+        Toast.makeText(getContext(), "Fragment on Pause", Toast.LENGTH_SHORT).show();
+        super.onPause();
+        deviceInforList = dbDeviceInfor.getAllDevice();
         updateRecyclerView();
     }
 

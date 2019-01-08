@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DBDeviceInfor extends SQLiteOpenHelper {
+    private static  DBDeviceInfor sInstance;
 
     public static final  String DATABASE_NAME ="DeviceInfor";
     private static final String TABLE_NAME ="Device";
@@ -21,6 +22,14 @@ public class DBDeviceInfor extends SQLiteOpenHelper {
     private static final String UDID ="udid";
 
     private Context context;
+
+    //Singleton Pattern
+    public static synchronized DBDeviceInfor getInstance(Context context){
+        if(sInstance==null){
+            sInstance = new DBDeviceInfor(context.getApplicationContext());
+        }
+        return sInstance;
+    }
 
     public DBDeviceInfor(Context context) {
         super(context, DATABASE_NAME,null, 1);
