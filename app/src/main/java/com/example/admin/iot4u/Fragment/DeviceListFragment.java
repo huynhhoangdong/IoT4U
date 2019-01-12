@@ -44,13 +44,6 @@ public class DeviceListFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerViewDeviceList);
         dbDeviceInfor = new DBDeviceInfor(view.getContext());
 
-//        for (int i = 0;i<20;i++) {
-//            DeviceInfor deviceInfor = new DeviceInfor("ABC","AABBCCDDEFF","IOT");
-//            deviceInforList.add(deviceInfor);
-//        }
-
-
-        Toast.makeText(getContext(), "Fragment on View Created", Toast.LENGTH_SHORT).show();
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,15 +59,6 @@ public class DeviceListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Toast.makeText(getContext(), "Fragment on Resume", Toast.LENGTH_SHORT).show();
-        deviceInforList = dbDeviceInfor.getAllDevice();
-        updateRecyclerView();
-    }
-
-    @Override
-    public void onPause() {
-        Toast.makeText(getContext(), "Fragment on Pause", Toast.LENGTH_SHORT).show();
-        super.onPause();
         deviceInforList = dbDeviceInfor.getAllDevice();
         updateRecyclerView();
     }

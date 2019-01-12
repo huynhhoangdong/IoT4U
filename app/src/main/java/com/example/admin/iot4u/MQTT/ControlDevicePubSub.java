@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobileconnectors.iot.AWSIotKeystoreHelper;
@@ -29,7 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
 
 
-public class ControlDevicePubSub extends Activity {
+public class ControlDevicePubSub extends Activity implements View.OnClickListener{
 
     static final String LOG_TAG = ControlDevice.class.getCanonicalName();
 
@@ -53,19 +54,6 @@ public class ControlDevicePubSub extends Activity {
     // Certificate and key aliases in the KeyStore
     private static final String CERTIFICATE_ID = "2617167b00102ff961c4cd276789c70334c028b0d1e038cf4ba9135500068d07";
 
-    EditText txtSubcribe;
-    EditText txtTopic;
-    EditText txtMessage;
-
-    TextView tvLastMessage;
-    TextView tvClientId;
-    TextView tvStatus;
-
-    Button btnConnect;
-    Button btnSubscribe;
-    Button btnPublish;
-    Button btnDisconnect;
-
     Button btnOFF;
     Button btnRED;
     Button btnGREEN;
@@ -82,6 +70,12 @@ public class ControlDevicePubSub extends Activity {
     KeyStore clientKeyStore = null;
     String certificateId;
 
+    String messageAWS;
+    String topicPubAWS;
+    String topicSubAWS;
+
+
+
     CognitoCachingCredentialsProvider credentialsProvider;
 
     @Override
@@ -89,53 +83,34 @@ public class ControlDevicePubSub extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.control_device_pubsub);
 
-        tvLastMessage = findViewById(R.id.edtReceiveMessage);
-        tvClientId =  findViewById(R.id.edtClientId);
-        tvStatus = findViewById(R.id.edtStatus);
 
-        txtSubcribe =  findViewById(R.id.edtSubTopic);
-        txtTopic = findViewById(R.id.edtPubTopic);
-        txtMessage = findViewById(R.id.edtPublishMessage);
-
-        btnConnect = findViewById(R.id.btnConnect);
-        btnConnect.setOnClickListener(connectClick);
-        btnConnect.setEnabled(false);
-
-        btnSubscribe = findViewById(R.id.btnSubscribe);
-        btnSubscribe.setOnClickListener(subscribeClick);
-
-        btnPublish =  findViewById(R.id.btnPublish);
-        btnPublish.setOnClickListener(publishClick);
-
-        btnDisconnect = findViewById(R.id.btnDisconnect);
-        btnDisconnect.setOnClickListener(disconnectClick);
 
         btnOFF = findViewById(R.id.btnOFF);
-        btnOFF.setOnClickListener(offClick);
+        btnOFF.setOnClickListener(this);
 
         btnRED = findViewById(R.id.btnRED);
-        btnRED.setOnClickListener(redClick);
+        btnRED.setOnClickListener(this);
 
         btnGREEN = findViewById(R.id.btnGREEN);
-        btnGREEN.setOnClickListener(greenClick);
+        btnGREEN.setOnClickListener(this);
 
         btnBLUE = findViewById(R.id.btnBLUE);
-        btnBLUE.setOnClickListener(blueClick);
+        btnBLUE.setOnClickListener(this);
 
         //Get Data from DeviceListAdapter
 
         Intent intent = getIntent();
         String udid = intent.getStringExtra("UDID");
-        txtSubcribe.setText(udid+"/E2A");
-        txtTopic.setText(udid+"/A2E");
-        txtMessage.setText("{\"FUNCTION\":\"ON\"}");
+
+        topicPubAWS = udid+"/A2E";
+        topicSubAWS = udid+"/E2A";
 
         // MQTT client IDs are required to be unique per AWS IoT account.
         // This UUID is "practically unique" but does not _guarantee_
         // uniqueness.
         //clientId = UUID.randomUUID().toString();
         clientId = udid;
-        tvClientId.setText(clientId);
+
 
         // Initialize the AWS Cognito credentials provider
         credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -179,7 +154,10 @@ public class ControlDevicePubSub extends Activity {
                     // load keystore from file into memory to pass on connection
                     clientKeyStore = AWSIotKeystoreHelper.getIotKeystore(certificateId,
                             keystorePath, keystoreName, keystorePassword);
-                    btnConnect.setEnabled(true);
+                    //btnConnect.setEnabled(true);
+                    //Dong add to auto connect AWS service
+                    connectToAWS();
+
                 } else {
                     Log.i(LOG_TAG, "Key/cert " + certificateId + " not found in keystore.");
                 }
@@ -235,12 +213,12 @@ public class ControlDevicePubSub extends Activity {
                                 .getCertificateArn());
                         mIotAndroidClient.attachPrincipalPolicy(policyAttachRequest);
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                btnConnect.setEnabled(true);
-                            }
-                        });
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                btnConnect.setEnabled(true);
+//                            }
+//                        });
                     } catch (Exception e) {
                         Log.e(LOG_TAG,
                                 "Exception occurred when generating new private key and certificate.",
@@ -249,152 +227,115 @@ public class ControlDevicePubSub extends Activity {
                 }
             }).start();
         }
+
+
     }
 
 
-    View.OnClickListener connectClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
 
-            Log.d(LOG_TAG, "clientId = " + clientId);
+    private void connectToAWS() {
+        Log.d(LOG_TAG, "clientId = " + clientId);
 
-            try {
-                mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
-                    @Override
-                    public void onStatusChanged(final AWSIotMqttClientStatus status,
-                                                final Throwable throwable) {
-                        Log.d(LOG_TAG, "Status = " + String.valueOf(status));
+        try {
+            mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
+                @Override
+                public void onStatusChanged(final AWSIotMqttClientStatus status,
+                                            final Throwable throwable) {
+                    Log.d(LOG_TAG, "Status = " + String.valueOf(status));
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (status == AWSIotMqttClientStatus.Connecting) {
-                                    tvStatus.setText("Connecting...");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (status == AWSIotMqttClientStatus.Connecting) {
+                                Toast.makeText(ControlDevicePubSub.this, "Connecting...", Toast.LENGTH_SHORT).show();
 
-                                } else if (status == AWSIotMqttClientStatus.Connected) {
-                                    tvStatus.setText("Connected");
 
-                                } else if (status == AWSIotMqttClientStatus.Reconnecting) {
-                                    if (throwable != null) {
-                                        Log.e(LOG_TAG, "Connection error.", throwable);
-                                    }
-                                    tvStatus.setText("Reconnecting");
-                                } else if (status == AWSIotMqttClientStatus.ConnectionLost) {
-                                    if (throwable != null) {
-                                        Log.e(LOG_TAG, "Connection error.", throwable);
-                                    }
-                                    tvStatus.setText("Disconnected");
-                                } else {
-                                    tvStatus.setText("Disconnected");
+                            } else if (status == AWSIotMqttClientStatus.Connected) {
+                                Toast.makeText(ControlDevicePubSub.this, "Connected", Toast.LENGTH_SHORT).show();
+                                subscribeAWSTopic();
 
+                            } else if (status == AWSIotMqttClientStatus.Reconnecting) {
+                                if (throwable != null) {
+                                    Log.e(LOG_TAG, "Connection error.", throwable);
                                 }
+                                Toast.makeText(ControlDevicePubSub.this, "Reconnecting...", Toast.LENGTH_SHORT).show();
+                            } else if (status == AWSIotMqttClientStatus.ConnectionLost) {
+                                if (throwable != null) {
+                                    Log.e(LOG_TAG, "Connection error.", throwable);
+                                }
+                                Toast.makeText(ControlDevicePubSub.this, "Disconnected...", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(ControlDevicePubSub.this, "Disconnected...", Toast.LENGTH_SHORT).show();
+
                             }
-                        });
-                    }
-                });
-            } catch (final Exception e) {
-                Log.e(LOG_TAG, "Connection error.", e);
-                tvStatus.setText("Error! " + e.getMessage());
-            }
+                        }
+                    });
+
+
+                }
+            });
+        } catch (final Exception e) {
+            Log.e(LOG_TAG, "Connection error.", e);
+            Toast.makeText(this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
-    };
+    }
 
-    //--- OnClick
+    private void subscribeAWSTopic() {
 
-    View.OnClickListener subscribeClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+        Log.d(LOG_TAG, "topic = " + topicSubAWS);
 
-            final String topic = txtSubcribe.getText().toString();
-            //final String topic = tvClientId.getText().toString()+"/E2A";
+        try {
+            mqttManager.subscribeToTopic(topicSubAWS, AWSIotMqttQos.QOS0,
+                    new AWSIotMqttNewMessageCallback() {
+                        @Override
+                        public void onMessageArrived(final String topicSubAWS, final byte[] data) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        String message = new String(data, "UTF-8");
+                                        Log.d(LOG_TAG, "Message arrived:");
+                                        Log.d(LOG_TAG, "   Topic: " + topicSubAWS);
+                                        Log.d(LOG_TAG, " Message: " + message);
 
-            Log.d(LOG_TAG, "topic = " + topic);
+                                        Toast.makeText(ControlDevicePubSub.this, message, Toast.LENGTH_SHORT).show();
 
-            try {
-                mqttManager.subscribeToTopic(topic, AWSIotMqttQos.QOS0,
-                        new AWSIotMqttNewMessageCallback() {
-                            @Override
-                            public void onMessageArrived(final String topic, final byte[] data) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            String message = new String(data, "UTF-8");
-                                            Log.d(LOG_TAG, "Message arrived:");
-                                            Log.d(LOG_TAG, "   Topic: " + topic);
-                                            Log.d(LOG_TAG, " Message: " + message);
-
-                                            tvLastMessage.setText(message);
-
-                                        } catch (UnsupportedEncodingException e) {
-                                            Log.e(LOG_TAG, "Message encoding error.", e);
-                                        }
+                                    } catch (UnsupportedEncodingException e) {
+                                        Log.e(LOG_TAG, "Message encoding error.", e);
                                     }
-                                });
-                            }
-                        });
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Subscription error.", e);
-            }
+                                }
+                            });
+                        }
+                    });
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Subscription error.", e);
         }
-    };
+    }
 
-    View.OnClickListener publishClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
 
-            final String topic = txtTopic.getText().toString();
-            //final String topic = tvClientId.getText().toString()+"/A2E";
-            final String msg = txtMessage.getText().toString();
+    @Override
+    public void onClick(View v) {
 
-            try {
-                mqttManager.publishString(msg, topic, AWSIotMqttQos.QOS0);
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Publish error.", e);
-            }
-
+        switch (v.getId()) {
+            case R.id.btnOFF:
+                messageAWS = "{\"FUNCTION\":\"OFF\"}";
+                break;
+            case R.id.btnRED:
+                messageAWS = "{\"FUNCTION\":\"RED\"}";
+                break;
+            case R.id.btnGREEN:
+                messageAWS = "{\"FUNCTION\":\"GREEN\"}";
+                break;
+            case R.id.btnBLUE:
+                messageAWS = "{\"FUNCTION\":\"BLUE\"}";
+                break;
         }
-    };
 
-    View.OnClickListener disconnectClick = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            try {
-                mqttManager.disconnect();
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Disconnect error.", e);
-            }
-
+        try {
+            mqttManager.publishString(messageAWS, topicPubAWS, AWSIotMqttQos.QOS0);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Publish error.", e);
         }
-    };
 
-  View.OnClickListener offClick = new View.OnClickListener(){
-
-      @Override
-      public void onClick(View v) {
-          txtMessage.setText("{\"FUNCTION\":\"OFF\"}");
-      }
-  };
-    View.OnClickListener redClick = new View.OnClickListener(){
-
-        @Override
-        public void onClick(View v) {
-            txtMessage.setText("{\"FUNCTION\":\"RED\"}");
-        }
-    };
-    View.OnClickListener greenClick = new View.OnClickListener(){
-
-        @Override
-        public void onClick(View v) {
-            txtMessage.setText("{\"FUNCTION\":\"GREEN\"}");
-        }
-    };
-    View.OnClickListener blueClick = new View.OnClickListener(){
-
-        @Override
-        public void onClick(View v) {
-            txtMessage.setText("{\"FUNCTION\":\"BLUE\"}");
-        }
-    };
+    }
 }

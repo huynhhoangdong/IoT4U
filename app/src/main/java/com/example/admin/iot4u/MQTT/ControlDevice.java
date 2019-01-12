@@ -30,19 +30,13 @@ import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
 import java.util.UUID;
 
+//Not use
 public class ControlDevice extends Activity implements View.OnClickListener {
-
-
 
     TextView tvNameDevice;
     TextView tvMacDevice;
     Button btnON;
     Button btnOFF;
-
-
-
-
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

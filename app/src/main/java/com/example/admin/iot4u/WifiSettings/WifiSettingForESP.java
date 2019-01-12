@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+//Not use
 public class WifiSettingForESP extends Activity implements View.OnClickListener {
     private Button btnScan;
     private ListView lvWifi;

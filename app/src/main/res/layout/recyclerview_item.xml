@@ -39,5 +39,4 @@
         android:src="@drawable/ic_edit_green"
         android:paddingRight="10dp"/>
 
-
 </RelativeLayout>
