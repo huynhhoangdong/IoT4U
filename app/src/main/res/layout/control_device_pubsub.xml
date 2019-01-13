@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
@@ -8,29 +9,47 @@
     <LinearLayout
 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <Button
-            android:id="@+id/btnOFF"
-            android:layout_width="wrap_content"
+            android:id="@+id/btnON"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="OFF"/>
+            android:text="ON"
+            android:theme="@style/Button_OFF"
+            android:layout_weight="1"/>
+        <Button
+            android:id="@+id/btnOFF"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OFF"
+            android:theme="@style/Button_OFF"
+            android:layout_weight="1"/>
+
         <Button
             android:id="@+id/btnRED"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="RED"/>
+            android:text="RED"
+            android:theme="@style/Button_RED"
+            android:layout_weight="1"/>
+
         <Button
             android:id="@+id/btnGREEN"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="GREEN"/>
+            android:text="GREEN"
+            android:theme="@style/Button_GREEN"
+            android:layout_weight="1"/>
+
         <Button
             android:id="@+id/btnBLUE"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="BLUE"/>
+            android:text="BLUE"
+            android:theme="@style/Button_BLUE"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 

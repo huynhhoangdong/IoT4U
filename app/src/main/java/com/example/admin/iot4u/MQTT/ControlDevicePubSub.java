@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,7 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
 
 
-public class ControlDevicePubSub extends Activity implements View.OnClickListener{
+public class ControlDevicePubSub extends AppCompatActivity implements View.OnClickListener{
 
     static final String LOG_TAG = ControlDevice.class.getCanonicalName();
 
@@ -53,12 +54,11 @@ public class ControlDevicePubSub extends Activity implements View.OnClickListene
     private static final String KEYSTORE_PASSWORD = "BSocLIfz4Y059Gan4S6K6mUV84+KgNmzy2D1+DiH";
     // Certificate and key aliases in the KeyStore
     private static final String CERTIFICATE_ID = "2617167b00102ff961c4cd276789c70334c028b0d1e038cf4ba9135500068d07";
-
+    Button btnON;
     Button btnOFF;
     Button btnRED;
     Button btnGREEN;
     Button btnBLUE;
-
 
     AWSIotClient mIotAndroidClient;
     AWSIotMqttManager mqttManager;
@@ -74,8 +74,6 @@ public class ControlDevicePubSub extends Activity implements View.OnClickListene
     String topicPubAWS;
     String topicSubAWS;
 
-
-
     CognitoCachingCredentialsProvider credentialsProvider;
 
     @Override
@@ -83,8 +81,8 @@ public class ControlDevicePubSub extends Activity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.control_device_pubsub);
 
-
-
+        btnON = findViewById(R.id.btnON);
+        btnON.setOnClickListener(this);
         btnOFF = findViewById(R.id.btnOFF);
         btnOFF.setOnClickListener(this);
 
@@ -110,7 +108,6 @@ public class ControlDevicePubSub extends Activity implements View.OnClickListene
         // uniqueness.
         //clientId = UUID.randomUUID().toString();
         clientId = udid;
-
 
         // Initialize the AWS Cognito credentials provider
         credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -142,7 +139,6 @@ public class ControlDevicePubSub extends Activity implements View.OnClickListene
         keystoreName = KEYSTORE_NAME;
         keystorePassword = KEYSTORE_PASSWORD;
         certificateId = CERTIFICATE_ID;
-
 
         // To load cert/key from keystore on filesystem
         try {
@@ -213,29 +209,17 @@ public class ControlDevicePubSub extends Activity implements View.OnClickListene
                                 .getCertificateArn());
                         mIotAndroidClient.attachPrincipalPolicy(policyAttachRequest);
 
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                btnConnect.setEnabled(true);
-//                            }
-//                        });
                     } catch (Exception e) {
                         Log.e(LOG_TAG,
-                                "Exception occurred when generating new private key and certificate.",
-                                e);
+                                "Exception occurred when generating new private key and certificate.", e);
                     }
                 }
             }).start();
         }
-
-
     }
-
-
 
     private void connectToAWS() {
         Log.d(LOG_TAG, "clientId = " + clientId);
-
         try {
             mqttManager.connect(clientKeyStore, new AWSIotMqttClientStatusCallback() {
                 @Override
@@ -266,12 +250,9 @@ public class ControlDevicePubSub extends Activity implements View.OnClickListene
                                 Toast.makeText(ControlDevicePubSub.this, "Disconnected...", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(ControlDevicePubSub.this, "Disconnected...", Toast.LENGTH_SHORT).show();
-
                             }
                         }
                     });
-
-
                 }
             });
         } catch (final Exception e) {
@@ -281,9 +262,7 @@ public class ControlDevicePubSub extends Activity implements View.OnClickListene
     }
 
     private void subscribeAWSTopic() {
-
         Log.d(LOG_TAG, "topic = " + topicSubAWS);
-
         try {
             mqttManager.subscribeToTopic(topicSubAWS, AWSIotMqttQos.QOS0,
                     new AWSIotMqttNewMessageCallback() {
@@ -317,6 +296,9 @@ public class ControlDevicePubSub extends Activity implements View.OnClickListene
     public void onClick(View v) {
 
         switch (v.getId()) {
+            case R.id.btnON:
+                messageAWS = "{\"FUNCTION\":\"ON\"}";
+                break;
             case R.id.btnOFF:
                 messageAWS = "{\"FUNCTION\":\"OFF\"}";
                 break;

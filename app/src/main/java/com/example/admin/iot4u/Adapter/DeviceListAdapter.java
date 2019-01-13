@@ -1,6 +1,7 @@
 package com.example.admin.iot4u.Adapter;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,8 +51,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
 
         viewHolder.tvDeviceName.setText(deviceInfor.deviceName.toString());
         viewHolder.tvDeviceMac.setText(deviceInfor.deviceMac.toString());
-
-
 
     }
 
@@ -103,13 +103,14 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                 case R.id.btn_delete_item:
                     Toast.makeText(rContext, "Delete Item", Toast.LENGTH_SHORT).show();
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(rContext);
-                    alertDialog.setTitle(deviceInfor.deviceName.toString());
-                    alertDialog.setMessage(deviceInfor.deviceMac.toString());
+                    alertDialog.setTitle("Delete");
+                    alertDialog.setMessage("Do you want to delete this device");
                     alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Toast.makeText(rContext, "Delete Item YES", Toast.LENGTH_SHORT).show();
                             DBDeviceInfor.getInstance(rContext).deleteDevice(deviceInfor);
+                            dialog.dismiss();
                         }
                     });
                     alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
@@ -126,6 +127,33 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                     break;
                 case R.id.btn_edit_item:
                     Toast.makeText(rContext, "Edit Item", Toast.LENGTH_SHORT).show();
+                    final Dialog editNameDialog = new Dialog(rContext);
+                    editNameDialog.setContentView(R.layout.dialog_edit_device_name);
+
+                    final TextView edtInputName = editNameDialog.findViewById(R.id.edtDialogInputName);
+                    Button btnOK = editNameDialog.findViewById(R.id.btnDialogOK);
+                    Button btnCancel = editNameDialog.findViewById(R.id.btnDialogCancel);
+
+                    edtInputName.setText(deviceInfor.deviceName.toString());
+
+                    btnOK.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String name = edtInputName.getText().toString();
+                            DBDeviceInfor.getInstance(rContext).UpdateName(deviceInfor,name);
+                            editNameDialog.dismiss();
+                        }
+                    });
+
+                    btnCancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            editNameDialog.cancel();
+                        }
+                    });
+
+                    editNameDialog.show();
+
                     break;
 
             }

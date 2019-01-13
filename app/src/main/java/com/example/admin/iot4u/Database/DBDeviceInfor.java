@@ -102,6 +102,13 @@ public class DBDeviceInfor extends SQLiteOpenHelper {
 
     }
 
+    public int UpdateName(DeviceInfor device,String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(NAME,name);
+        return db.update(TABLE_NAME,values,ID +"=?",new String[] { String.valueOf(device.getDeviceId())});
+
+    }
      /*
      Getting All Device
      */

@@ -179,9 +179,19 @@ public class WiFiSettings extends Activity {
                             if (result.equals("OK")) {
                             Toast.makeText(WiFiSettings.this, "WIFI OK", Toast.LENGTH_SHORT).show();
                             deviceInfor = new DeviceInfor("IOT4U", mac, udid);
-                            dbDeviceInfor.addDevice(deviceInfor);
-//                            DeviceListAdapter adapter = new DeviceListAdapter(WiFiSettings.this,null);
-//                            adapter.notifyDataSetChanged();
+                            ArrayList<DeviceInfor> listDevice = (ArrayList<DeviceInfor>) DBDeviceInfor.getInstance(WiFiSettings.this).getAllDevice();
+                            int listDeviceSize = listDevice.size();
+
+                            // Remove the duplicated device
+                            for (int i=0; i<listDeviceSize;i++){
+                                if(mac.equals(listDevice.get(i).getDeviceMac())){
+                                    DBDeviceInfor.getInstance(WiFiSettings.this).deleteDevice(listDevice.get(i));
+                                    Toast.makeText(WiFiSettings.this, "Remove " + listDevice.get(i).getDeviceMac(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            // Add new device
+                            DBDeviceInfor.getInstance(WiFiSettings.this).addDevice(deviceInfor);
 
                         } else if (result.equals("FAILED")) {
                             Toast.makeText(WiFiSettings.this, "WIFI FAILED", Toast.LENGTH_SHORT).show();
