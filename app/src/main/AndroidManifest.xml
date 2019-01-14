@@ -28,14 +28,12 @@
 
         <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".test"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".MQTT.ControlDevice"></activity>
-        <activity android:name=".WifiSettings.WifiSettingForESP"></activity>
 
         <activity android:name=".WifiSettings.WiFiSettings"></activity>
 
         <activity android:name=".MQTT.ControlDevicePubSub"></activity>
+
+        <activity android:name=".test"></activity>
 
     </application>
 

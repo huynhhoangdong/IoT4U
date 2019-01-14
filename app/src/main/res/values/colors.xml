@@ -7,7 +7,7 @@
     <color name="colorRed">#FF0000</color>
     <color name="colorGreen">#00FF00</color>
     <color name="colorBlue">#0000FF</color>
-
+    <color name="colorWhite">#FFFFFF</color>
     <!--//Color Swatches provided by http://designmodo.github.io/Flat-UI/-->
     <color name="fbutton_color_turquoise">#1abc9c</color>
     <color name="fbutton_color_green_sea">#16a085</color>

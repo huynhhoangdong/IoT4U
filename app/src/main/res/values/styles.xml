@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/fbutton_color_sun_flower</item>
+        <item name="colorPrimary">@color/fbutton_color_nephritis</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/fbutton_color_emerald</item>
     </style>
@@ -27,7 +27,7 @@
 
     <!--Button-->
     <style name="Button_OFF" parent="Theme.AppCompat">
-        <item name="colorButtonNormal">@color/fbutton_color_peter_river</item>
+        <item name="colorButtonNormal">@color/fbutton_color_green_sea</item>
         <item name="colorControlHighlight">@color/colorAccent</item>
     </style>
 
@@ -44,6 +44,7 @@
     <style name="Button_BLUE" parent="Theme.AppCompat">
         <item name="colorButtonNormal">@color/fbutton_color_peter_river</item>
         <item name="colorControlHighlight">@color/colorBlue</item>
+        <item name="dialogCornerRadius">0dp</item>
     </style>
 
 </resources>

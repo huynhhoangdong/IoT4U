@@ -6,52 +6,85 @@
 
     >
 
+    <ImageButton
+        android:id="@+id/imgBtnOnOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:adjustViewBounds="true"
+        android:padding="20dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/power_on_button"
+        android:background="@color/colorWhite"
+        android:clickable="true"
+
+        />
+
+
     <LinearLayout
 
+        android:id="@+id/linearOnOff"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgBtnOnOff"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnON"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="ON"
-            android:theme="@style/Button_OFF"
-            android:layout_weight="1"/>
+            android:theme="@style/Button_OFF" />
+
         <Button
             android:id="@+id/btnOFF"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="OFF"
-            android:theme="@style/Button_OFF"
-            android:layout_weight="1"/>
+            android:theme="@style/Button_OFF" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linearOnOff"
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btnRED"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="RED"
             android:theme="@style/Button_RED"
-            android:layout_weight="1"/>
+            />
 
         <Button
             android:id="@+id/btnGREEN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="GREEN"
-            android:theme="@style/Button_GREEN"
-            android:layout_weight="1"/>
+            android:theme="@style/Button_GREEN" />
 
         <Button
             android:id="@+id/btnBLUE"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="BLUE"
-            android:theme="@style/Button_BLUE"
-            android:layout_weight="1"/>
-
+            android:theme="@style/Button_BLUE" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/tvTest"
+        android:layout_below="@+id/linearColor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>

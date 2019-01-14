@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.example.admin.iot4u.Adapter.DeviceListAdapter;
 import com.example.admin.iot4u.Database.DBDeviceInfor;
 import com.example.admin.iot4u.Database.DeviceInfor;
 import com.example.admin.iot4u.R;
+import com.example.admin.iot4u.SwipeController.SwipeController;
 import com.example.admin.iot4u.WifiSettings.WiFiSettings;
 import com.example.admin.iot4u.WifiSettings.WifiSettingForESP;
 
@@ -43,6 +45,7 @@ public class DeviceListFragment extends Fragment {
         floatingActionButton = view.findViewById(R.id.btnFloating);
         recyclerView = view.findViewById(R.id.recyclerViewDeviceList);
         dbDeviceInfor = new DBDeviceInfor(view.getContext());
+        DBDeviceInfor.getInstance(view.getContext()).addDevice(new DeviceInfor("TEST","TEST MAC","qwerty123456"));
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +78,11 @@ public class DeviceListFragment extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
 
-        RecyclerView.ItemDecoration decoration = new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL);
-        recyclerView.addItemDecoration(decoration);
+        //RecyclerView.ItemDecoration decoration = new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL);
+        //recyclerView.addItemDecoration(decoration);
+
+        SwipeController swipeController = new SwipeController();
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 }

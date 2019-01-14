@@ -1,6 +1,5 @@
 package com.example.admin.iot4u.MQTT;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +58,7 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
     Button btnRED;
     Button btnGREEN;
     Button btnBLUE;
+    ImageButton imgBtnOnOff;
 
     AWSIotClient mIotAndroidClient;
     AWSIotMqttManager mqttManager;
@@ -73,6 +73,10 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
     String messageAWS;
     String topicPubAWS;
     String topicSubAWS;
+
+    TextView tvTest;
+
+    boolean onStatus = true;
 
     CognitoCachingCredentialsProvider credentialsProvider;
 
@@ -95,6 +99,11 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
         btnBLUE = findViewById(R.id.btnBLUE);
         btnBLUE.setOnClickListener(this);
 
+        imgBtnOnOff = findViewById(R.id.imgBtnOnOff);
+        imgBtnOnOff.setOnClickListener(this);
+
+        tvTest = findViewById(R.id.tvTest);
+
         //Get Data from DeviceListAdapter
 
         Intent intent = getIntent();
@@ -108,6 +117,7 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
         // uniqueness.
         //clientId = UUID.randomUUID().toString();
         clientId = udid;
+        tvTest.setText(udid);
 
         // Initialize the AWS Cognito credentials provider
         credentialsProvider = new CognitoCachingCredentialsProvider(
@@ -277,7 +287,8 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
                                         Log.d(LOG_TAG, "   Topic: " + topicSubAWS);
                                         Log.d(LOG_TAG, " Message: " + message);
 
-                                        Toast.makeText(ControlDevicePubSub.this, message, Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(ControlDevicePubSub.this, message, Toast.LENGTH_SHORT).show();
+                                        tvTest.setText(message.toString());
 
                                     } catch (UnsupportedEncodingException e) {
                                         Log.e(LOG_TAG, "Message encoding error.", e);
@@ -298,9 +309,11 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
         switch (v.getId()) {
             case R.id.btnON:
                 messageAWS = "{\"FUNCTION\":\"ON\"}";
+                imgBtnOnOff.setImageResource(R.drawable.power_off_button);
                 break;
             case R.id.btnOFF:
                 messageAWS = "{\"FUNCTION\":\"OFF\"}";
+                imgBtnOnOff.setImageResource(R.drawable.power_on_button);
                 break;
             case R.id.btnRED:
                 messageAWS = "{\"FUNCTION\":\"RED\"}";
@@ -310,6 +323,20 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.btnBLUE:
                 messageAWS = "{\"FUNCTION\":\"BLUE\"}";
+                break;
+
+            case R.id.imgBtnOnOff:
+                if(onStatus) {
+                    messageAWS = "{\"FUNCTION\":\"ON\"}";
+                    imgBtnOnOff.setImageResource(R.drawable.power_off_button);
+                    //Toast.makeText(this, "Image Click ON", Toast.LENGTH_SHORT).show();
+                    onStatus = false;
+                } else {
+                    messageAWS = "{\"FUNCTION\":\"OFF\"}";
+                    imgBtnOnOff.setImageResource(R.drawable.power_on_button);
+                    //Toast.makeText(this, "Image Click OFF", Toast.LENGTH_SHORT).show();
+                    onStatus = true;
+                }
                 break;
         }
 
