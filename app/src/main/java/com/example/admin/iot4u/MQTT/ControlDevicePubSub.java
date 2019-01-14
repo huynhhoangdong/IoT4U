@@ -218,7 +218,8 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
                         policyAttachRequest.setPrincipal(createKeysAndCertificateResult
                                 .getCertificateArn());
                         mIotAndroidClient.attachPrincipalPolicy(policyAttachRequest);
-
+                        // Connect to AWS
+                        connectToAWS();
                     } catch (Exception e) {
                         Log.e(LOG_TAG,
                                 "Exception occurred when generating new private key and certificate.", e);
@@ -226,6 +227,8 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
                 }
             }).start();
         }
+        // Subscribe
+        subscribeAWSTopic();
     }
 
     private void connectToAWS() {
@@ -241,12 +244,14 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
                         @Override
                         public void run() {
                             if (status == AWSIotMqttClientStatus.Connecting) {
-                                Toast.makeText(ControlDevicePubSub.this, "Connecting...", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(ControlDevicePubSub.this, "Connecting...", Toast.LENGTH_SHORT).show();
+                                tvTest.setText("Connecting...");
 
 
                             } else if (status == AWSIotMqttClientStatus.Connected) {
-                                Toast.makeText(ControlDevicePubSub.this, "Connected", Toast.LENGTH_SHORT).show();
-                                subscribeAWSTopic();
+                                //Toast.makeText(ControlDevicePubSub.this, "Connected", Toast.LENGTH_SHORT).show();
+                                tvTest.setText("Connected");
+                                //subscribeAWSTopic();
 
                             } else if (status == AWSIotMqttClientStatus.Reconnecting) {
                                 if (throwable != null) {
