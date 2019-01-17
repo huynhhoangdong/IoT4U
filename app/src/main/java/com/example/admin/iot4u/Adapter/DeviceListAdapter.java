@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.admin.iot4u.Database.DBDeviceInfor;
-import com.example.admin.iot4u.MQTT.ControlDevicePubSub;
+import com.example.admin.iot4u.Database.DeviceInforDatabase;
+import com.example.admin.iot4u.MQTT.ControlDevicePubSubActivity;
 import com.example.admin.iot4u.Database.DeviceInfor;
 import com.example.admin.iot4u.R;
 
@@ -93,7 +91,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                 case R.id.tvDeviceName:
 
                     Toast.makeText(v.getContext(), "ViewHolder Item", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(v.getContext(), ControlDevicePubSub.class);
+                    Intent intent = new Intent(v.getContext(), ControlDevicePubSubActivity.class);
                     intent.putExtra("Name", deviceInfor.deviceName.toString());
                     intent.putExtra("Mac",deviceInfor.deviceMac.toString());
                     intent.putExtra("UDID",deviceInfor.getDeviceUdid());
@@ -109,7 +107,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             Toast.makeText(rContext, "Delete Item YES", Toast.LENGTH_SHORT).show();
-                            DBDeviceInfor.getInstance(rContext).deleteDevice(deviceInfor);
+                            DeviceInforDatabase.getInstance(rContext).deleteDevice(deviceInfor);
                             dialog.dismiss();
                         }
                     });
@@ -140,7 +138,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
                         @Override
                         public void onClick(View v) {
                             String name = edtInputName.getText().toString();
-                            DBDeviceInfor.getInstance(rContext).UpdateName(deviceInfor,name);
+                            DeviceInforDatabase.getInstance(rContext).UpdateName(deviceInfor,name);
                             editNameDialog.dismiss();
                         }
                     });

@@ -30,7 +30,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
 
 
-public class ControlDevicePubSub extends AppCompatActivity implements View.OnClickListener{
+public class ControlDevicePubSubActivity extends AppCompatActivity implements View.OnClickListener{
 
     static final String LOG_TAG = ControlDevice.class.getCanonicalName();
 
@@ -53,28 +53,28 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
     private static final String KEYSTORE_PASSWORD = "BSocLIfz4Y059Gan4S6K6mUV84+KgNmzy2D1+DiH";
     // Certificate and key aliases in the KeyStore
     private static final String CERTIFICATE_ID = "2617167b00102ff961c4cd276789c70334c028b0d1e038cf4ba9135500068d07";
-    Button btnON;
-    Button btnOFF;
-    Button btnRED;
-    Button btnGREEN;
-    Button btnBLUE;
-    ImageButton imgBtnOnOff;
+    private Button btnON;
+    private Button btnOFF;
+    private Button btnRED;
+    private Button btnGREEN;
+    private Button btnBLUE;
+    private ImageButton imgBtnOnOff;
 
-    AWSIotClient mIotAndroidClient;
-    AWSIotMqttManager mqttManager;
-    String clientId;
-    String keystorePath;
-    String keystoreName;
-    String keystorePassword;
+    private AWSIotClient mIotAndroidClient;
+    private AWSIotMqttManager mqttManager;
+    private String clientId;
+    private String keystorePath;
+    private String keystoreName;
+    private String keystorePassword;
 
-    KeyStore clientKeyStore = null;
-    String certificateId;
+    private KeyStore clientKeyStore = null;
+    private String certificateId;
 
-    String messageAWS;
-    String topicPubAWS;
-    String topicSubAWS;
+    private String messageAWS;
+    private String topicPubAWS;
+    private String topicSubAWS;
 
-    TextView tvTest;
+    private TextView tvTest;
 
     boolean onStatus = true;
 
@@ -244,12 +244,12 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
                         @Override
                         public void run() {
                             if (status == AWSIotMqttClientStatus.Connecting) {
-                                //Toast.makeText(ControlDevicePubSub.this, "Connecting...", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(ControlDevicePubSubActivity.this, "Connecting...", Toast.LENGTH_SHORT).show();
                                 tvTest.setText("Connecting...");
 
 
                             } else if (status == AWSIotMqttClientStatus.Connected) {
-                                //Toast.makeText(ControlDevicePubSub.this, "Connected", Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(ControlDevicePubSubActivity.this, "Connected", Toast.LENGTH_SHORT).show();
                                 tvTest.setText("Connected");
                                 //subscribeAWSTopic();
 
@@ -257,14 +257,14 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
                                 if (throwable != null) {
                                     Log.e(LOG_TAG, "Connection error.", throwable);
                                 }
-                                Toast.makeText(ControlDevicePubSub.this, "Reconnecting...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ControlDevicePubSubActivity.this, "Reconnecting...", Toast.LENGTH_SHORT).show();
                             } else if (status == AWSIotMqttClientStatus.ConnectionLost) {
                                 if (throwable != null) {
                                     Log.e(LOG_TAG, "Connection error.", throwable);
                                 }
-                                Toast.makeText(ControlDevicePubSub.this, "Disconnected...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ControlDevicePubSubActivity.this, "Disconnected...", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(ControlDevicePubSub.this, "Disconnected...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ControlDevicePubSubActivity.this, "Disconnected...", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -292,7 +292,7 @@ public class ControlDevicePubSub extends AppCompatActivity implements View.OnCli
                                         Log.d(LOG_TAG, "   Topic: " + topicSubAWS);
                                         Log.d(LOG_TAG, " Message: " + message);
 
-                                        //Toast.makeText(ControlDevicePubSub.this, message, Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(ControlDevicePubSubActivity.this, message, Toast.LENGTH_SHORT).show();
                                         tvTest.setText(message.toString());
 
                                     } catch (UnsupportedEncodingException e) {

@@ -11,8 +11,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DBDeviceInfor extends SQLiteOpenHelper {
-    private static  DBDeviceInfor sInstance;
+public class DeviceInforDatabase extends SQLiteOpenHelper {
+    private static DeviceInforDatabase sInstance;
 
     public static final  String DATABASE_NAME ="DeviceInfor";
     private static final String TABLE_NAME ="Device";
@@ -24,14 +24,14 @@ public class DBDeviceInfor extends SQLiteOpenHelper {
     private Context context;
 
     //Singleton Pattern
-    public static synchronized DBDeviceInfor getInstance(Context context){
+    public static synchronized DeviceInforDatabase getInstance(Context context){
         if(sInstance==null){
-            sInstance = new DBDeviceInfor(context.getApplicationContext());
+            sInstance = new DeviceInforDatabase(context.getApplicationContext());
         }
         return sInstance;
     }
 
-    public DBDeviceInfor(Context context) {
+    public DeviceInforDatabase(Context context) {
         super(context, DATABASE_NAME,null, 1);
         Log.d("DBManager", "DBManager: ");
         this.context = context;

@@ -12,10 +12,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.admin.iot4u.Adapter.DeviceListAdapter;
-import com.example.admin.iot4u.Database.DBDeviceInfor;
+import com.example.admin.iot4u.Database.DeviceInforDatabase;
 import com.example.admin.iot4u.Database.DeviceInfor;
-import com.example.admin.iot4u.Fragment.DeviceListFragment;
 import com.example.admin.iot4u.R;
 
 import org.json.JSONArray;
@@ -34,28 +32,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class WiFiSettings extends Activity {
+public class WiFiSettingsActivity extends Activity {
 
-    Button btnSend;
-    Button btnGetWifiList;
+    private Button btnSend;
+    private Button btnGetWifiList;
     //TextView ssid;
-    TextView pass;
-    TextView wifiListShow;
-    TextView testResult;
-    Spinner spnWifiSSID;
+    private TextView pass;
+    private TextView wifiListShow;
+    private TextView testResult;
+    private Spinner spnWifiSSID;
 
-    String dataOut;
-    String dataIn;
-    JSONObject configInfo, getWifiList, readJson;
-    JSONArray wifiFromESP;
-    List<String> wifiList;
+    private String dataOut;
+    private String dataIn;
+    private JSONObject configInfo, getWifiList, readJson;
+    private JSONArray wifiFromESP;
+    private List<String> wifiList;
 
-    String udid;
-    String cmd;
-    String result;
-    String mac;
+    private String udid;
+    private String cmd;
+    private String result;
+    private String mac;
 
-    DBDeviceInfor dbDeviceInfor;
+    DeviceInforDatabase dbDeviceInfor;
     DeviceInfor deviceInfor;
 
     @Override
@@ -80,7 +78,7 @@ public class WiFiSettings extends Activity {
 
         wifiList = new ArrayList<>();
 
-        dbDeviceInfor = new DBDeviceInfor(this);
+        dbDeviceInfor = new DeviceInforDatabase(this);
 
         udid = UUID.randomUUID().toString();
 
@@ -109,7 +107,7 @@ public class WiFiSettings extends Activity {
                     readJson = new JSONObject(dataIn);
                     cmd = readJson.getString("CMD");
                     if (cmd.equals("WIFI_LIST")) {
-                        //Toast.makeText(WiFiSettings.this, "WIFI_LIST", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(WiFiSettingsActivity.this, "WIFI_LIST", Toast.LENGTH_SHORT).show();
                         Log.d("WIFI_LIST", "RECEIVE WIFI LIST");
                         mac = readJson.getString("MAC");
                         wifiFromESP = readJson.getJSONArray("WIFI");
@@ -124,7 +122,7 @@ public class WiFiSettings extends Activity {
                             Log.d("WIFI", s);
                         }
 
-                        ArrayAdapter<String> adapter = new ArrayAdapter(WiFiSettings.this, android.R.layout.simple_spinner_item, wifiList);
+                        ArrayAdapter<String> adapter = new ArrayAdapter(WiFiSettingsActivity.this, android.R.layout.simple_spinner_item, wifiList);
                         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
                         spnWifiSSID.setAdapter(adapter);
 
@@ -132,7 +130,7 @@ public class WiFiSettings extends Activity {
                             spnWifiSSID.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                                                       @Override
                                                                       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                                          //Toast.makeText(WiFiSettings.this, spnWifiSSID.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
+                                                                          //Toast.makeText(WiFiSettingsActivity.this, spnWifiSSID.getSelectedItem().toString(), Toast.LENGTH_SHORT).show();
                                                                           Log.d("WIFI SELECTION", spnWifiSSID.getSelectedItem().toString());
                                                                       }
 
@@ -177,26 +175,26 @@ public class WiFiSettings extends Activity {
                     if (cmd.equals("WIFI_CONNECTION_RESULT")) {
                         result = readJson.getString("RESULT");
                             if (result.equals("OK")) {
-                            Toast.makeText(WiFiSettings.this, "WIFI OK", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WiFiSettingsActivity.this, "WIFI OK", Toast.LENGTH_SHORT).show();
                             deviceInfor = new DeviceInfor("IOT4U", mac, udid);
-                            ArrayList<DeviceInfor> listDevice = (ArrayList<DeviceInfor>) DBDeviceInfor.getInstance(WiFiSettings.this).getAllDevice();
+                            ArrayList<DeviceInfor> listDevice = (ArrayList<DeviceInfor>) DeviceInforDatabase.getInstance(WiFiSettingsActivity.this).getAllDevice();
                             int listDeviceSize = listDevice.size();
 
                             // Remove the duplicated device
                             for (int i=0; i<listDeviceSize;i++){
                                 if(mac.equals(listDevice.get(i).getDeviceMac())){
-                                    DBDeviceInfor.getInstance(WiFiSettings.this).deleteDevice(listDevice.get(i));
-                                    Toast.makeText(WiFiSettings.this, "Remove " + listDevice.get(i).getDeviceMac(), Toast.LENGTH_SHORT).show();
+                                    DeviceInforDatabase.getInstance(WiFiSettingsActivity.this).deleteDevice(listDevice.get(i));
+                                    Toast.makeText(WiFiSettingsActivity.this, "Remove " + listDevice.get(i).getDeviceMac(), Toast.LENGTH_SHORT).show();
                                 }
                             }
 
                             // Add new device
-                            DBDeviceInfor.getInstance(WiFiSettings.this).addDevice(deviceInfor);
+                            DeviceInforDatabase.getInstance(WiFiSettingsActivity.this).addDevice(deviceInfor);
 
                         } else if (result.equals("FAILED")) {
-                            Toast.makeText(WiFiSettings.this, "WIFI FAILED", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WiFiSettingsActivity.this, "WIFI FAILED", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(WiFiSettings.this, "UNKNOW RESULT", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WiFiSettingsActivity.this, "UNKNOW RESULT", Toast.LENGTH_SHORT).show();
                         }
                     }
                 } catch (JSONException e) {
@@ -237,7 +235,7 @@ public class WiFiSettings extends Activity {
                     @Override
                     public void run() {
                         wifiListShow.setText(dataIn);
-                        //Toast.makeText(WiFiSettings.this, dataIn, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(WiFiSettingsActivity.this, dataIn, Toast.LENGTH_SHORT).show();
                         Log.d("DATA-IN", dataIn);
                     }
                 });

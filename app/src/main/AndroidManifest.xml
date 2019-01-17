@@ -29,9 +29,9 @@
         <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
-        <activity android:name=".WifiSettings.WiFiSettings"></activity>
+        <activity android:name=".WifiSettings.WiFiSettingsActivity"></activity>
 
-        <activity android:name=".MQTT.ControlDevicePubSub"></activity>
+        <activity android:name=".MQTT.ControlDevicePubSubActivity"></activity>
 
         <activity android:name=".test"></activity>
 
