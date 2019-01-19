@@ -1,6 +1,9 @@
 package com.example.admin.iot4u.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.inputmethodservice.KeyboardView;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,22 +16,28 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.admin.iot4u.Adapter.DeviceListAdapter;
 import com.example.admin.iot4u.Database.DeviceInforDatabase;
 import com.example.admin.iot4u.Database.DeviceInfor;
+import com.example.admin.iot4u.MainActivity;
 import com.example.admin.iot4u.R;
 import com.example.admin.iot4u.SwipeController.SwipeController;
+import com.example.admin.iot4u.SwipeController.SwipeControllerActions;
 import com.example.admin.iot4u.WifiSettings.WiFiSettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class DeviceListFragment extends Fragment {
     FloatingActionButton floatingActionButton;
     RecyclerView recyclerView;
     List<DeviceInfor> deviceInforList = new ArrayList<>();
     DeviceInforDatabase dbDeviceInfor;
+    public MainActivity mainActivity;
+    //SwipeController swipeController;
 
     @Nullable
     @Override
@@ -42,7 +51,7 @@ public class DeviceListFragment extends Fragment {
         floatingActionButton = view.findViewById(R.id.btnFloating);
         recyclerView = view.findViewById(R.id.recyclerViewDeviceList);
         dbDeviceInfor = new DeviceInforDatabase(view.getContext());
-        DeviceInforDatabase.getInstance(view.getContext()).addDevice(new DeviceInfor("TEST","TEST MAC","qwerty123456"));
+        DeviceInforDatabase.getInstance(view.getContext()).addDevice(new DeviceInfor(UUID.randomUUID().toString(),"TEST MAC","qwerty123456"));
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,8 +68,14 @@ public class DeviceListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        deviceInforList = dbDeviceInfor.getAllDevice();
+        deviceInforList =  DeviceInforDatabase.getInstance(this.getContext()).getAllDevice();
         updateRecyclerView();
+    }
+
+
+    public void refeshData() {
+        MainActivity mainActivity = (MainActivity) getActivity();
+        if(mainActivity!=null) mainActivity.updateData();
     }
 
     private void updateRecyclerView(){
@@ -68,7 +83,7 @@ public class DeviceListFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getActivity(),
                 LinearLayoutManager.VERTICAL,false);
 
-        DeviceListAdapter adapter = new DeviceListAdapter(this.getContext(),deviceInforList);
+        final DeviceListAdapter adapter = new DeviceListAdapter(this.getContext(),deviceInforList);
 
 
         recyclerView.setAdapter(adapter);
@@ -76,10 +91,43 @@ public class DeviceListFragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
 
         //RecyclerView.ItemDecoration decoration = new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL);
-        //recyclerView.addItemDecoration(decoration);
 
-        SwipeController swipeController = new SwipeController();
+
+        final SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
+            @Override
+            public void onLeftClicked(int postion) {
+                Toast.makeText(getContext(), "EDIT", Toast.LENGTH_SHORT).show();
+                //super.onLeftClicked(postion);
+            }
+
+            @Override
+            public void onRightClicked(int postion) {
+                DeviceInfor deviceInfor = adapter.getDeviceIinfor(postion);
+                //DeviceInforDatabase.getInstance(getContext()).deleteDeviceByID(postion);
+                dbDeviceInfor.deleteDevice(deviceInfor);
+                refeshData();
+                adapter.notifyDataSetChanged();
+                adapter.notifyItemRemoved(postion);
+                adapter.notifyItemRangeChanged(postion,adapter.getItemCount());
+
+
+                //DeviceInforDatabase.getInstance(getContext()).notifyAll();
+                Toast.makeText(getContext(), "DELETE: " + postion, Toast.LENGTH_SHORT).show();
+                //super.onRightClicked(postion);
+            }
+        });
+
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(swipeController);
         itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void onDraw(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+
+                swipeController.onDraw(c);
+            }
+        });
+
+
     }
 }

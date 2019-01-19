@@ -15,18 +15,28 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.admin.iot4u.Adapter.DeviceListAdapter;
+import com.example.admin.iot4u.Database.DeviceInfor;
+import com.example.admin.iot4u.Database.DeviceInforDatabase;
 import com.example.admin.iot4u.Fragment.ChatFragment;
 import com.example.admin.iot4u.Fragment.DeviceListFragment;
 import com.example.admin.iot4u.Fragment.ProfileFragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
     private DrawerLayout drawer;
-
+    private List<DeviceInfor> deviceInforList;
+    DeviceListAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        deviceInforList = new ArrayList<>();
+        adapter = new DeviceListAdapter(this,deviceInforList);
 
         toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
@@ -44,6 +54,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new DeviceListFragment(), "Dong").commit();
             navigationView.setCheckedItem(R.id.nav_deviceList);
         }
+
+
+
+
+
+
     }
 
     @Override
@@ -118,4 +134,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ft.detach(frag).attach(frag).commit();
     }
 
+    public void updateData() {
+//        if(deviceInforList!=null) deviceInforList.clear();
+//
+//        List<DeviceInfor> deviceInfors = DeviceInforDatabase.getInstance(this).getAllDevice();
+//
+//        for (DeviceInfor deviceInfor : deviceInfors) {
+//            deviceInforList.add(deviceInfor);
+//        }
+//
+//        adapter.notifyDataSetChanged();
+
+
+
+        Toast.makeText(this, "updateData", Toast.LENGTH_SHORT).show();
+//
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        Fragment frag = getSupportFragmentManager().findFragmentByTag("Dong");
+//        if(frag != null)
+//            ft.detach(frag).attach(frag).commit();
+
+
+
+
+
+    }
 }

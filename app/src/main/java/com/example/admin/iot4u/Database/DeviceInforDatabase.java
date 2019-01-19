@@ -138,12 +138,21 @@ public class DeviceInforDatabase extends SQLiteOpenHelper {
      Delete a student by ID
      */
 
+    public void deleteDeviceByID(int deviceId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, ID + " = ?",
+                new String[] {String.valueOf(deviceId)});
+        db.close();
+    }
+
     public void deleteDevice(DeviceInfor device) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, ID + " = ?",
                 new String[] { String.valueOf(device.getDeviceId()) });
         db.close();
     }
+
+
 
      /*
      Get Count Student in Table Student

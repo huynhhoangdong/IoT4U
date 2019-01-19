@@ -48,7 +48,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         DeviceInfor deviceInfor = deviceInfors.get(i);
 
         viewHolder.tvDeviceName.setText(deviceInfor.deviceName.toString());
-        viewHolder.tvDeviceMac.setText(deviceInfor.deviceMac.toString());
+        viewHolder.tvDeviceMac.setText(String.valueOf(deviceInfor.deviceId));
 
     }
 

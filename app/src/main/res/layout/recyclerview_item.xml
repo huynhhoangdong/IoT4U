@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:layout_margin="8dp"
-    app:cardCornerRadius="0dp">
+    app:cardCornerRadius="5dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
