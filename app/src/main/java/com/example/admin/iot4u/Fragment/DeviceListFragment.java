@@ -1,6 +1,9 @@
 package com.example.admin.iot4u.Fragment;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.inputmethodservice.KeyboardView;
@@ -16,6 +19,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.admin.iot4u.Adapter.DeviceListAdapter;
@@ -32,12 +37,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class DeviceListFragment extends Fragment {
-    FloatingActionButton floatingActionButton;
-    RecyclerView recyclerView;
-    List<DeviceInfor> deviceInforList = new ArrayList<>();
-    DeviceInforDatabase dbDeviceInfor;
-    public MainActivity mainActivity;
-    //SwipeController swipeController;
+    private FloatingActionButton floatingActionButton;
+    private RecyclerView recyclerView;
+    private List<DeviceInfor> deviceInforList = new ArrayList<>();
+
 
     @Nullable
     @Override
@@ -50,7 +53,6 @@ public class DeviceListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         floatingActionButton = view.findViewById(R.id.btnFloating);
         recyclerView = view.findViewById(R.id.recyclerViewDeviceList);
-        dbDeviceInfor = new DeviceInforDatabase(view.getContext());
         DeviceInforDatabase.getInstance(view.getContext()).addDevice(new DeviceInfor(UUID.randomUUID().toString(),"TEST MAC","qwerty123456"));
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +74,7 @@ public class DeviceListFragment extends Fragment {
         updateRecyclerView();
     }
 
-
+    // Call update fragment View in MainActivity
     public void refeshData() {
         MainActivity mainActivity = (MainActivity) getActivity();
         if(mainActivity!=null) mainActivity.updateData();
@@ -92,28 +94,67 @@ public class DeviceListFragment extends Fragment {
 
         //RecyclerView.ItemDecoration decoration = new DividerItemDecoration(this.getContext(),DividerItemDecoration.VERTICAL);
 
-
         final SwipeController swipeController = new SwipeController(new SwipeControllerActions() {
             @Override
             public void onLeftClicked(int postion) {
+                final DeviceInfor deviceInfor = adapter.getDeviceIinfor(postion);
                 Toast.makeText(getContext(), "EDIT", Toast.LENGTH_SHORT).show();
-                //super.onLeftClicked(postion);
+                final Dialog editNameDialog = new Dialog(getContext());
+                editNameDialog.setContentView(R.layout.dialog_edit_device_name);
+
+                final TextView edtInputName = editNameDialog.findViewById(R.id.edtDialogInputName);
+                Button btnOK = editNameDialog.findViewById(R.id.btnDialogOK);
+                Button btnCancel = editNameDialog.findViewById(R.id.btnDialogCancel);
+
+                edtInputName.setText(deviceInfor.deviceName.toString());
+
+                btnOK.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String name = edtInputName.getText().toString();
+                        DeviceInforDatabase.getInstance(getContext()).UpdateName(deviceInfor,name);
+                        refeshData();
+                        editNameDialog.dismiss();
+                    }
+                });
+
+                btnCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        editNameDialog.cancel();
+                    }
+                });
+
+                editNameDialog.show();
             }
 
             @Override
             public void onRightClicked(int postion) {
-                DeviceInfor deviceInfor = adapter.getDeviceIinfor(postion);
-                //DeviceInforDatabase.getInstance(getContext()).deleteDeviceByID(postion);
-                dbDeviceInfor.deleteDevice(deviceInfor);
-                refeshData();
-                adapter.notifyDataSetChanged();
-                adapter.notifyItemRemoved(postion);
-                adapter.notifyItemRangeChanged(postion,adapter.getItemCount());
 
+                final DeviceInfor deviceInfor = adapter.getDeviceIinfor(postion);
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+                alertDialog.setTitle("Delete");
+                alertDialog.setMessage("Do you want to delete this device");
+                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(), "Delete Item YES", Toast.LENGTH_SHORT).show();
+                        DeviceInforDatabase.getInstance(getContext()).deleteDevice(deviceInfor);
+                        refeshData();
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // DO SOMETHING HERE
+                        Toast.makeText(getContext(), "Delete Item NO", Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                });
 
-                //DeviceInforDatabase.getInstance(getContext()).notifyAll();
-                Toast.makeText(getContext(), "DELETE: " + postion, Toast.LENGTH_SHORT).show();
-                //super.onRightClicked(postion);
+                AlertDialog dialog = alertDialog.create();
+                dialog.show();
             }
         });
 

@@ -28,15 +28,14 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
     private DrawerLayout drawer;
-    private List<DeviceInfor> deviceInforList;
-    DeviceListAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        deviceInforList = new ArrayList<>();
-        adapter = new DeviceListAdapter(this,deviceInforList);
+
+
 
         toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
@@ -128,35 +127,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment frag = getSupportFragmentManager().findFragmentByTag("Dong");
-        if(frag != null)
-        ft.detach(frag).attach(frag).commit();
+        updateData();
     }
 
     public void updateData() {
-//        if(deviceInforList!=null) deviceInforList.clear();
-//
-//        List<DeviceInfor> deviceInfors = DeviceInforDatabase.getInstance(this).getAllDevice();
-//
-//        for (DeviceInfor deviceInfor : deviceInfors) {
-//            deviceInforList.add(deviceInfor);
-//        }
-//
-//        adapter.notifyDataSetChanged();
-
-
-
-        Toast.makeText(this, "updateData", Toast.LENGTH_SHORT).show();
-//
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        Fragment frag = getSupportFragmentManager().findFragmentByTag("Dong");
-//        if(frag != null)
-//            ft.detach(frag).attach(frag).commit();
-
-
-
-
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment frag = getSupportFragmentManager().findFragmentByTag("Dong");
+        if(frag != null) ft.detach(frag).attach(frag).commit();
 
     }
 }
