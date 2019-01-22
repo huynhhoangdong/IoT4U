@@ -98,7 +98,6 @@ public class DeviceListFragment extends Fragment {
             @Override
             public void onLeftClicked(int postion) {
                 final DeviceInfor deviceInfor = adapter.getDeviceIinfor(postion);
-                Toast.makeText(getContext(), "EDIT", Toast.LENGTH_SHORT).show();
                 final Dialog editNameDialog = new Dialog(getContext());
                 editNameDialog.setContentView(R.layout.dialog_edit_device_name);
 
@@ -130,31 +129,55 @@ public class DeviceListFragment extends Fragment {
 
             @Override
             public void onRightClicked(int postion) {
-
                 final DeviceInfor deviceInfor = adapter.getDeviceIinfor(postion);
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
-                alertDialog.setTitle("Delete");
-                alertDialog.setMessage("Do you want to delete this device");
-                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                final Dialog deleteDialog = new Dialog(getContext());
+                deleteDialog.setContentView(R.layout.dialog_delete_device);
+
+                Button btnYes = deleteDialog.findViewById(R.id.btnDialogYes);
+                Button btnNo = deleteDialog.findViewById(R.id.btnDialogNo);
+
+                btnYes.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getContext(), "Delete Item YES", Toast.LENGTH_SHORT).show();
+                    public void onClick(View v) {
                         DeviceInforDatabase.getInstance(getContext()).deleteDevice(deviceInfor);
                         refeshData();
-                        dialog.dismiss();
-                    }
-                });
-                alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // DO SOMETHING HERE
-                        Toast.makeText(getContext(), "Delete Item NO", Toast.LENGTH_SHORT).show();
-                        dialog.cancel();
+                        deleteDialog.dismiss();
                     }
                 });
 
-                AlertDialog dialog = alertDialog.create();
-                dialog.show();
+                btnNo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteDialog.cancel();
+                    }
+                });
+
+                deleteDialog.show();
+
+//                final DeviceInfor deviceInfor = adapter.getDeviceIinfor(postion);
+//                AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+//                alertDialog.setTitle("Delete");
+//                alertDialog.setMessage("Are you sure?");
+//                alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(getContext(), "Delete Item YES", Toast.LENGTH_SHORT).show();
+//                        DeviceInforDatabase.getInstance(getContext()).deleteDevice(deviceInfor);
+//                        refeshData();
+//                        dialog.dismiss();
+//                    }
+//                });
+//                alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        // DO SOMETHING HERE
+//                        Toast.makeText(getContext(), "Delete Item NO", Toast.LENGTH_SHORT).show();
+//                        dialog.cancel();
+//                    }
+//                });
+//
+//                AlertDialog dialog = alertDialog.create();
+//                dialog.show();
             }
         });
 

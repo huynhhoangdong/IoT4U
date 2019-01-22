@@ -10,42 +10,42 @@
     >
 
     <TextView
-        android:id="@+id/tvDialogChangeName"
+        android:id="@+id/tvDialogDelete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#5E35B1"
         android:textColor="@color/colorWhite"
         android:padding="20dp"
         android:textSize="25dp"
-        android:text="Edit Name"/>
-    <EditText
-        android:id="@+id/edtDialogInputName"
-        android:layout_below="@+id/tvDialogChangeName"
+        android:text="Delete"/>
+    <TextView
+        android:id="@+id/edtDialogConfirm"
+        android:layout_below="@+id/tvDialogDelete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:hint="Name"/>
+        android:padding="20dp"
+        android:textSize="25dp"
+        android:textColor="#000000"
+        android:text="Are you sure?"/>
 
     <Button
-        android:id="@+id/btnDialogCancel"
-        android:layout_below="@+id/edtDialogInputName"
-        android:layout_toLeftOf="@+id/btnDialogOK"
+        android:id="@+id/btnDialogNo"
+        android:layout_below="@+id/edtDialogConfirm"
+        android:layout_toLeftOf="@+id/btnDialogYes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorWhite"
-
         android:background="@drawable/shape_for_button"
-        android:text="Cancel"/>
+        android:text="No"/>
     <Button
-        android:id="@+id/btnDialogOK"
-        android:layout_below="@+id/edtDialogInputName"
+        android:id="@+id/btnDialogYes"
+        android:layout_below="@+id/edtDialogConfirm"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK"
+        android:text="Yes"
         android:textColor="@color/colorWhite"
         android:background="@drawable/shape_for_button"
-
         />
 
 
