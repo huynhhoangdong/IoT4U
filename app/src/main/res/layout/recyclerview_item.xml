@@ -8,7 +8,7 @@
     android:clickable="true"
     android:focusable="true"
     android:layout_margin="8dp"
-    app:cardCornerRadius="5dp">
+    app:cardCornerRadius="0dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,22 +31,33 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvDeviceName"
             android:layout_toRightOf="@+id/imgDevice" />
-
-        <ImageView
-            android:id="@+id/btn_delete_item"
+        <Switch
+            android:id="@+id/sw_on_off_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_delete_green"
             android:layout_alignParentRight="true"
-            android:paddingRight="10dp"/>
+            android:layout_centerVertical="true"
+            android:textOff="OFF"
+            android:textOn="ON"
+            android:checked="false"
+            android:showText="true"
+            />
 
-        <ImageView
-            android:id="@+id/btn_edit_item"
-            android:layout_toLeftOf="@+id/btn_delete_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_edit_green"
-            android:paddingRight="10dp"/>
+        <!--<Button-->
+            <!--android:id="@+id/btn_off_item"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="OFF"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:paddingRight="10dp"/>-->
+
+        <!--<Button-->
+            <!--android:id="@+id/btn_on_item"-->
+            <!--android:layout_toLeftOf="@+id/btn_off_item"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="ON"-->
+            <!--android:paddingRight="10dp"/>-->
 
     </RelativeLayout>
 

@@ -3,6 +3,7 @@ package com.example.admin.iot4u.WifiSettings;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class WiFiSettingsActivity extends Activity {
+public class WiFiSettingsActivity extends AppCompatActivity {
 
     private Button btnSend;
     private Button btnGetWifiList;

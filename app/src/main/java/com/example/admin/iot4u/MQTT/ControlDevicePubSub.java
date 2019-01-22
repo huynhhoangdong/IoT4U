@@ -1,5 +1,6 @@
 package com.example.admin.iot4u.MQTT;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -30,7 +31,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
 
 
-public class ControlDevicePubSubActivity extends AppCompatActivity implements View.OnClickListener{
+public class ControlDevicePubSub {
 
     static final String LOG_TAG = ControlDevice.class.getCanonicalName();
 
@@ -53,17 +54,11 @@ public class ControlDevicePubSubActivity extends AppCompatActivity implements Vi
     private static final String KEYSTORE_PASSWORD = "BSocLIfz4Y059Gan4S6K6mUV84+KgNmzy2D1+DiH";
     // Certificate and key aliases in the KeyStore
     private static final String CERTIFICATE_ID = "2617167b00102ff961c4cd276789c70334c028b0d1e038cf4ba9135500068d07";
-    private Button btnON;
-    private Button btnOFF;
-    private Button btnRED;
-    private Button btnGREEN;
-    private Button btnBLUE;
-    private ImageButton imgBtnOnOff;
 
     private AWSIotClient mIotAndroidClient;
     private AWSIotMqttManager mqttManager;
     private String clientId;
-    //private String udid;
+    private String udid;
     private String keystorePath;
     private String keystoreName;
     private String keystorePassword;
@@ -75,45 +70,18 @@ public class ControlDevicePubSubActivity extends AppCompatActivity implements Vi
     private String topicPubAWS;
     private String topicSubAWS;
 
-    private TextView tvTest;
+    public Context context;
 
     boolean onStatus = true;
 
     CognitoCachingCredentialsProvider credentialsProvider;
 
-//    public ControlDevicePubSubActivity(String udid) {
-//        this.udid= udid;
-//    }
+    public ControlDevicePubSub(Context context, String udid) {
+        this.udid= udid;
+        this.context = context;
+    }
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.control_device_pubsub);
-
-        btnON = findViewById(R.id.btnON);
-        btnON.setOnClickListener(this);
-        btnOFF = findViewById(R.id.btnOFF);
-        btnOFF.setOnClickListener(this);
-
-        btnRED = findViewById(R.id.btnRED);
-        btnRED.setOnClickListener(this);
-
-        btnGREEN = findViewById(R.id.btnGREEN);
-        btnGREEN.setOnClickListener(this);
-
-        btnBLUE = findViewById(R.id.btnBLUE);
-        btnBLUE.setOnClickListener(this);
-
-        imgBtnOnOff = findViewById(R.id.imgBtnOnOff);
-        imgBtnOnOff.setOnClickListener(this);
-
-        tvTest = findViewById(R.id.tvTest);
-
-        //Get Data from DeviceListAdapter
-
-        Intent intent = getIntent();
-        String udid = intent.getStringExtra("UDID");
-
+    public void initialAWS() {
         topicPubAWS = udid+"/A2E";
         topicSubAWS = udid+"/E2A";
 
@@ -122,11 +90,10 @@ public class ControlDevicePubSubActivity extends AppCompatActivity implements Vi
         // uniqueness.
         //clientId = UUID.randomUUID().toString();
         clientId = udid;
-        tvTest.setText(udid);
 
         // Initialize the AWS Cognito credentials provider
         credentialsProvider = new CognitoCachingCredentialsProvider(
-                getApplicationContext(), // context
+                context, // context
                 COGNITO_POOL_ID, // Identity Pool ID
                 MY_REGION // Region
         );
@@ -150,7 +117,7 @@ public class ControlDevicePubSubActivity extends AppCompatActivity implements Vi
         mIotAndroidClient = new AWSIotClient(credentialsProvider);
         mIotAndroidClient.setRegion(region);
 
-        keystorePath = getFilesDir().getPath();
+        keystorePath = context.getFilesDir().getPath();
         keystoreName = KEYSTORE_NAME;
         keystorePassword = KEYSTORE_PASSWORD;
         certificateId = CERTIFICATE_ID;
@@ -245,39 +212,39 @@ public class ControlDevicePubSubActivity extends AppCompatActivity implements Vi
                                             final Throwable throwable) {
                     Log.d(LOG_TAG, "Status = " + String.valueOf(status));
 
-                    runOnUiThread(new Runnable() {
+                    new Runnable() {
                         @Override
                         public void run() {
                             if (status == AWSIotMqttClientStatus.Connecting) {
                                 //Toast.makeText(ControlDevicePubSubActivity.this, "Connecting...", Toast.LENGTH_SHORT).show();
-                                tvTest.setText("Connecting...");
+
 
 
                             } else if (status == AWSIotMqttClientStatus.Connected) {
                                 //Toast.makeText(ControlDevicePubSubActivity.this, "Connected", Toast.LENGTH_SHORT).show();
-                                tvTest.setText("Connected");
+
                                 //subscribeAWSTopic();
 
                             } else if (status == AWSIotMqttClientStatus.Reconnecting) {
                                 if (throwable != null) {
                                     Log.e(LOG_TAG, "Connection error.", throwable);
                                 }
-                                Toast.makeText(ControlDevicePubSubActivity.this, "Reconnecting...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Reconnecting...", Toast.LENGTH_SHORT).show();
                             } else if (status == AWSIotMqttClientStatus.ConnectionLost) {
                                 if (throwable != null) {
                                     Log.e(LOG_TAG, "Connection error.", throwable);
                                 }
-                                Toast.makeText(ControlDevicePubSubActivity.this, "Disconnected...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Disconnected...", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(ControlDevicePubSubActivity.this, "Disconnected...", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(context, "Disconnected...", Toast.LENGTH_SHORT).show();
                             }
                         }
-                    });
+                    };
                 }
             });
         } catch (final Exception e) {
             Log.e(LOG_TAG, "Connection error.", e);
-            Toast.makeText(this, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error! " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -288,7 +255,7 @@ public class ControlDevicePubSubActivity extends AppCompatActivity implements Vi
                     new AWSIotMqttNewMessageCallback() {
                         @Override
                         public void onMessageArrived(final String topicSubAWS, final byte[] data) {
-                            runOnUiThread(new Runnable() {
+                            new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
@@ -298,13 +265,11 @@ public class ControlDevicePubSubActivity extends AppCompatActivity implements Vi
                                         Log.d(LOG_TAG, " Message: " + message);
 
                                         //Toast.makeText(ControlDevicePubSubActivity.this, message, Toast.LENGTH_SHORT).show();
-                                        tvTest.setText(message.toString());
-
                                     } catch (UnsupportedEncodingException e) {
                                         Log.e(LOG_TAG, "Message encoding error.", e);
                                     }
                                 }
-                            });
+                            };
                         }
                     });
         } catch (Exception e) {
@@ -314,57 +279,11 @@ public class ControlDevicePubSubActivity extends AppCompatActivity implements Vi
 
     public void publishAWS(String msgAWS) {
         try {
-            Toast.makeText(this.getApplicationContext(), msgAWS, Toast.LENGTH_SHORT).show();
-            Log.d("AWS", "Publish");
+            Toast.makeText(context, msgAWS, Toast.LENGTH_SHORT).show();
+            Log.d("AWS", "Publish: " + msgAWS);
             mqttManager.publishString(msgAWS, topicPubAWS, AWSIotMqttQos.QOS0);
         } catch (Exception e) {
             Log.e(LOG_TAG, "Publish error.", e);
         }
-    }
-
-
-    @Override
-    public void onClick(View v) {
-
-        switch (v.getId()) {
-            case R.id.btnON:
-                messageAWS = "{\"FUNCTION\":\"ON\"}";
-                imgBtnOnOff.setImageResource(R.drawable.power_off_button);
-                break;
-            case R.id.btnOFF:
-                messageAWS = "{\"FUNCTION\":\"OFF\"}";
-                imgBtnOnOff.setImageResource(R.drawable.power_on_button);
-                break;
-            case R.id.btnRED:
-                messageAWS = "{\"FUNCTION\":\"RED\"}";
-                break;
-            case R.id.btnGREEN:
-                messageAWS = "{\"FUNCTION\":\"GREEN\"}";
-                break;
-            case R.id.btnBLUE:
-                messageAWS = "{\"FUNCTION\":\"BLUE\"}";
-                break;
-
-            case R.id.imgBtnOnOff:
-                if(onStatus) {
-                    messageAWS = "{\"FUNCTION\":\"ON\"}";
-                    imgBtnOnOff.setImageResource(R.drawable.power_off_button);
-                    //Toast.makeText(this, "Image Click ON", Toast.LENGTH_SHORT).show();
-                    onStatus = false;
-                } else {
-                    messageAWS = "{\"FUNCTION\":\"OFF\"}";
-                    imgBtnOnOff.setImageResource(R.drawable.power_on_button);
-                    //Toast.makeText(this, "Image Click OFF", Toast.LENGTH_SHORT).show();
-                    onStatus = true;
-                }
-                break;
-        }
-
-        try {
-            mqttManager.publishString(messageAWS, topicPubAWS, AWSIotMqttQos.QOS0);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Publish error.", e);
-        }
-
     }
 }

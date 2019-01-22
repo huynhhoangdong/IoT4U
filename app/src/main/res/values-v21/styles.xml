@@ -4,7 +4,7 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:statusBarColor">@android:color/holo_red_dark</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
     </style>
 
 </resources>
