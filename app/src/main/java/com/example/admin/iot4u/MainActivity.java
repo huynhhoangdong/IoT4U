@@ -34,9 +34,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
-
         toolbar = findViewById(R.id.toolBar);
         setSupportActionBar(toolbar);
 
@@ -53,10 +50,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     new DeviceListFragment(), "Dong").commit();
             navigationView.setCheckedItem(R.id.nav_deviceList);
         }
-
-
-
-
 
 
     }

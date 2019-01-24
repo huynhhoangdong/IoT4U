@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.example.admin.iot4u.Database.DeviceInforDatabase;
 import com.example.admin.iot4u.MQTT.ControlDevicePubSub;
 import com.example.admin.iot4u.MQTT.ControlDevicePubSubActivity;
@@ -30,6 +33,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     public Context rContext;
     public List<DeviceInfor> deviceInfors;
     public DeviceInfor deviceInfor;
+    public ColorGenerator colorGenerator = ColorGenerator.DEFAULT;
 
     public DeviceListAdapter(Context rContext, List<DeviceInfor> deviceInfors) {
         this.rContext = rContext;
@@ -52,6 +56,11 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         DeviceInfor deviceInfor = deviceInfors.get(i);
         viewHolder.tvDeviceName.setText(deviceInfor.deviceName.toString());
         viewHolder.tvDeviceMac.setText(String.valueOf(deviceInfor.deviceId));
+
+        TextDrawable drawable = TextDrawable.builder()
+                .buildRound(deviceInfor.deviceName.substring(0,1), colorGenerator.getRandomColor());
+        viewHolder.imgDevice.setImageDrawable(drawable);
+
         final ControlDevicePubSub pubSubAWS = new ControlDevicePubSub(rContext,deviceInfor.deviceUdid);
         pubSubAWS.initialAWS();
         viewHolder.swOnOff.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -86,6 +95,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         public TextView tvDeviceName;
         public TextView tvDeviceMac;
         public Switch swOnOff;
+        public ImageView imgDevice;
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -93,6 +103,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             tvDeviceName = itemView.findViewById(R.id.tvDeviceName);
             tvDeviceMac  = itemView.findViewById(R.id.tvDeviceMAC);
             swOnOff = itemView.findViewById(R.id.sw_on_off_item);
+            imgDevice = itemView.findViewById(R.id.imgDevice);
             tvDeviceName.setOnClickListener(this);
         }
 

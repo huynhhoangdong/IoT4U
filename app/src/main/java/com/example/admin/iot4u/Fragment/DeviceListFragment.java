@@ -53,7 +53,7 @@ public class DeviceListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         floatingActionButton = view.findViewById(R.id.btnFloating);
         recyclerView = view.findViewById(R.id.recyclerViewDeviceList);
-        //DeviceInforDatabase.getInstance(view.getContext()).addDevice(new DeviceInfor(UUID.randomUUID().toString(),"TEST MAC","qwerty123456"));
+        DeviceInforDatabase.getInstance(view.getContext()).addDevice(new DeviceInfor(UUID.randomUUID().toString(),"TEST MAC","qwerty123456"));
 
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override

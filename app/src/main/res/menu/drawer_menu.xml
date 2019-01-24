@@ -5,28 +5,28 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_deviceList"
-            android:icon="@drawable/ic_list"
-            android:title="Device List" />
+            android:icon="@drawable/ic_cloud_black_24dp"
+            android:title="MQTT" />
         <item
             android:id="@+id/nav_chat"
-            android:icon="@drawable/ic_chat"
-            android:title="Chat" />
+            android:icon="@drawable/ic_wifi_black_24dp"
+            android:title="LAN/WAN" />
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_profile"
-            android:title="Profile" />
+            android:icon="@drawable/ic_bluetooth_black_24dp"
+            android:title="Bluetooth" />
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="Configuration">
         <menu>
             <item
                 android:id="@+id/nav_share"
-                android:icon="@drawable/ic_share"
-                android:title="Share" />
+                android:icon="@drawable/ic_settings_black_24dp"
+                android:title="Settings" />
             <item
                 android:id="@+id/nav_send"
-                android:icon="@drawable/ic_send"
-                android:title="Send" />
+                android:icon="@drawable/ic_info_black_24dp"
+                android:title="Information" />
         </menu>
     </item>
 

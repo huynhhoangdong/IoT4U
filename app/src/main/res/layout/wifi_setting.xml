@@ -1,69 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#263238"
     android:orientation="vertical"
-    android:background="@color/colorWhite">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@android:color/holo_green_light"
-        android:textColor="@android:color/white"
-        android:text="CONNECTION INSTRUCTION"/>
+    >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/view_wifi_setting"
+        android:layout_margin="10dp"
+        android:padding="20dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="CONNECTION INSTRUCTION"
+            android:textSize="25dp"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorBlack"
+            android:text="@string/Connection_Instruction" />
+
+        <Button
+            android:id="@+id/btnGetWifiList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shape_for_button"
+            android:text="GET WIFI LIST"
+            android:textColor="@android:color/white"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/view_wifi_setting"
+        android:layout_margin="10dp"
+        android:padding="20dp">
+        >
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/Connection_Instruction"/>
-    <Button
-        android:id="@+id/btnGetWifiList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:background="@android:color/holo_blue_bright"
-        android:text="GET WIFI LIST"/>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@android:color/holo_green_light"
-        android:textColor="@android:color/white"
         android:layout_marginTop="10dp"
-        android:text="WIFI SETTINGS"/>
+        android:gravity="center"
+        android:text="WIFI SETTINGS"
+        android:textSize="25dp"
+        android:textColor="@color/colorPrimary" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:text="WIFI's Name"/>
+        android:textColor="@color/colorBlack"
+        android:text="WIFI"
+
+        />
+
     <Spinner
         android:id="@+id/spnWifiSSID"
         android:layout_width="match_parent"
         android:layout_height="50dp"></Spinner>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
-        android:text="Password"/>
+        android:textColor="@color/colorBlack"
+        android:text="PASSWORD" />
+
     <EditText
         android:id="@+id/edtWifiPASS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="PASS"/>
+        android:hint="PASS" />
+
     <Button
         android:id="@+id/btnSend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
-        android:background="@android:color/holo_blue_bright"
-        android:text="SEND"/>
+        android:background="@drawable/shape_for_button"
+        android:text="SEND"
+        android:textColor="@android:color/white" />
+
     <TextView
         android:id="@+id/tvShow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Details"/>
+        android:hint="Details" />
+    </LinearLayout>
 
 </LinearLayout>
