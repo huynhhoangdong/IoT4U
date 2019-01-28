@@ -27,13 +27,18 @@ import com.amazonaws.services.iot.model.CreateKeysAndCertificateRequest;
 import com.amazonaws.services.iot.model.CreateKeysAndCertificateResult;
 import com.example.admin.iot4u.R;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
+
+import static com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread;
 
 
 public class ControlDevicePubSub {
 
-    static final String LOG_TAG = ControlDevice.class.getCanonicalName();
+    static final String LOG_TAG = ControlDevicePubSub.class.getCanonicalName();
 
     // --- Constants to modify per your configuration ---
     // Tim-IoT4U-N.Virginia
@@ -72,18 +77,21 @@ public class ControlDevicePubSub {
 
     public Context context;
 
+    private JSONObject readJSON;
     boolean onStatus = true;
 
     CognitoCachingCredentialsProvider credentialsProvider;
 
     public ControlDevicePubSub(Context context, String udid) {
-        this.udid= udid;
+        this.udid = udid;
         this.context = context;
     }
 
     public void initialAWS() {
         topicPubAWS = udid+"/A2E";
-        topicSubAWS = udid+"/E2A";
+        //topicSubAWS = udid+"/E2A";
+
+        topicSubAWS = "$aws/things/"+udid+"/shadow/update";
 
         // MQTT client IDs are required to be unique per AWS IoT account.
         // This UUID is "practically unique" but does not _guarantee_
@@ -135,6 +143,7 @@ public class ControlDevicePubSub {
                     //btnConnect.setEnabled(true);
                     //Dong add to auto connect AWS service
                     connectToAWS();
+                    //subscribeAWSTopic();
 
                 } else {
                     Log.i(LOG_TAG, "Key/cert " + certificateId + " not found in keystore.");
@@ -191,7 +200,14 @@ public class ControlDevicePubSub {
                                 .getCertificateArn());
                         mIotAndroidClient.attachPrincipalPolicy(policyAttachRequest);
                         // Connect to AWS
-                        connectToAWS();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                connectToAWS();
+                                //subscribeAWSTopic();
+                            }
+                        });
+
                     } catch (Exception e) {
                         Log.e(LOG_TAG,
                                 "Exception occurred when generating new private key and certificate.", e);
@@ -200,7 +216,8 @@ public class ControlDevicePubSub {
             }).start();
         }
         // Subscribe
-        subscribeAWSTopic();
+        //connectToAWS();
+        //subscribeAWSTopic();
     }
 
     public void connectToAWS() {
@@ -212,7 +229,7 @@ public class ControlDevicePubSub {
                                             final Throwable throwable) {
                     Log.d(LOG_TAG, "Status = " + String.valueOf(status));
 
-                    new Runnable() {
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (status == AWSIotMqttClientStatus.Connecting) {
@@ -222,8 +239,14 @@ public class ControlDevicePubSub {
 
                             } else if (status == AWSIotMqttClientStatus.Connected) {
                                 //Toast.makeText(ControlDevicePubSubActivity.this, "Connected", Toast.LENGTH_SHORT).show();
-
-                                //subscribeAWSTopic();
+//                                runOnUiThread(new Runnable() {
+//                                    @Override
+//                                    public void run() {
+//                                        //connectToAWS();
+//                                        //subscribeAWSTopic();
+//                                    }
+//                                });
+                                subscribeAWSTopic();
 
                             } else if (status == AWSIotMqttClientStatus.Reconnecting) {
                                 if (throwable != null) {
@@ -239,7 +262,9 @@ public class ControlDevicePubSub {
                                 Toast.makeText(context, "Disconnected...", Toast.LENGTH_SHORT).show();
                             }
                         }
-                    };
+                    });
+
+
                 }
             });
         } catch (final Exception e) {
@@ -249,27 +274,37 @@ public class ControlDevicePubSub {
     }
 
     private void subscribeAWSTopic() {
-        Log.d(LOG_TAG, "topic = " + topicSubAWS);
+        Log.d(LOG_TAG, "topicSub = " + topicSubAWS);
         try {
             mqttManager.subscribeToTopic(topicSubAWS, AWSIotMqttQos.QOS0,
                     new AWSIotMqttNewMessageCallback() {
                         @Override
                         public void onMessageArrived(final String topicSubAWS, final byte[] data) {
-                            new Runnable() {
+                            runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     try {
-                                        String message = new String(data, "UTF-8");
-                                        Log.d(LOG_TAG, "Message arrived:");
-                                        Log.d(LOG_TAG, "   Topic: " + topicSubAWS);
-                                        Log.d(LOG_TAG, " Message: " + message);
+                                        messageAWS = new String(data, "UTF-8");
+                                        Log.d(LOG_TAG, " Message arrived:");
+                                        Log.d(LOG_TAG, " Topic: " + topicSubAWS);
+                                        Log.d(LOG_TAG, " Message: " + messageAWS);
 
-                                        //Toast.makeText(ControlDevicePubSubActivity.this, message, Toast.LENGTH_SHORT).show();
+                                        try {
+                                            JSONObject readData = new JSONObject(messageAWS);
+                                            JSONObject state = readData.getJSONObject("state");
+                                            JSONObject reported = state.getJSONObject("reported");
+                                            String status = reported.getString("STATUS");
+                                            Toast.makeText(context, "The device is received: " + status, Toast.LENGTH_SHORT).show();
+
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
                                     } catch (UnsupportedEncodingException e) {
                                         Log.e(LOG_TAG, "Message encoding error.", e);
+
                                     }
                                 }
-                            };
+                            });
                         }
                     });
         } catch (Exception e) {

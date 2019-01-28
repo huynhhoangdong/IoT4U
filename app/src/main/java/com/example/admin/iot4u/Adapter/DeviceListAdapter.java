@@ -1,17 +1,12 @@
 package com.example.admin.iot4u.Adapter;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -20,7 +15,6 @@ import android.widget.Toast;
 
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
-import com.example.admin.iot4u.Database.DeviceInforDatabase;
 import com.example.admin.iot4u.MQTT.ControlDevicePubSub;
 import com.example.admin.iot4u.MQTT.ControlDevicePubSubActivity;
 import com.example.admin.iot4u.Database.DeviceInfor;
@@ -35,9 +29,12 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     public DeviceInfor deviceInfor;
     public ColorGenerator colorGenerator = ColorGenerator.DEFAULT;
 
+
+
     public DeviceListAdapter(Context rContext, List<DeviceInfor> deviceInfors) {
         this.rContext = rContext;
         this.deviceInfors = deviceInfors;
+
     }
 
     @NonNull
@@ -105,13 +102,23 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
             swOnOff = itemView.findViewById(R.id.sw_on_off_item);
             imgDevice = itemView.findViewById(R.id.imgDevice);
             tvDeviceName.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
             deviceInfor = getDeviceIinfor(getAdapterPosition());
+            if(v == itemView) {
+                //Toast.makeText(v.getContext(), "ViewHolder ItemView", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(), ControlDevicePubSubActivity.class);
+                intent.putExtra("Name", deviceInfor.deviceName.toString());
+                intent.putExtra("Mac",deviceInfor.deviceMac.toString());
+                intent.putExtra("UDID",deviceInfor.getDeviceUdid());
+                v.getContext().startActivity(intent);
+            }
             switch (v.getId()){
                 case R.id.tvDeviceName:
+
                     Toast.makeText(v.getContext(), "ViewHolder Item", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(v.getContext(), ControlDevicePubSubActivity.class);
                     intent.putExtra("Name", deviceInfor.deviceName.toString());

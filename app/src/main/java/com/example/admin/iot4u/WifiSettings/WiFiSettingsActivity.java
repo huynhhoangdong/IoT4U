@@ -95,11 +95,11 @@ public class WiFiSettingsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 dataOut = getWifiList + ".";
-                Thread socketClientThead;
-                socketClientThead = new Thread(new SocketClientThread());
-                socketClientThead.start();
+                Thread socketClientThread;
+                socketClientThread = new Thread(new SocketClientThread());
+                socketClientThread.start();
                 try {
-                    socketClientThead.join();
+                    socketClientThread.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -113,15 +113,21 @@ public class WiFiSettingsActivity extends AppCompatActivity {
                         mac = readJson.getString("MAC");
                         wifiFromESP = readJson.getJSONArray("WIFI");
                         wifiList.clear();
+                        //Check wifi list is got or not
+                        if(wifiFromESP.length()>0){
+                            Toast.makeText(WiFiSettingsActivity.this, "Get WiFi list successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(WiFiSettingsActivity.this, "WiFi list is empty, please try again", Toast.LENGTH_SHORT).show();
+                        }
+
                         for (int i = 0; i < wifiFromESP.length(); i++) {
                             String wifiItem = wifiFromESP.getString(i);
                             wifiList.add(wifiItem);
-
-
                         }
-                        for (String s : wifiList) {
-                            Log.d("WIFI", s);
-                        }
+
+//                        for (String s : wifiList) {
+//                            Log.d("WIFI", s);
+//                        }
 
                         ArrayAdapter<String> adapter = new ArrayAdapter(WiFiSettingsActivity.this, android.R.layout.simple_spinner_item, wifiList);
                         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
@@ -162,11 +168,11 @@ public class WiFiSettingsActivity extends AppCompatActivity {
                 }
                 // Initial thread variable
                 dataOut = configInfo + ".";
-                Thread socketClientThead;
-                socketClientThead = new Thread(new SocketClientThread());
-                socketClientThead.start();
+                Thread socketClientThread;
+                socketClientThread = new Thread(new SocketClientThread());
+                socketClientThread.start();
                 try {
-                    socketClientThead.join();
+                    socketClientThread.join();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -175,8 +181,8 @@ public class WiFiSettingsActivity extends AppCompatActivity {
                     cmd = readJson.getString("CMD");
                     if (cmd.equals("WIFI_CONNECTION_RESULT")) {
                         result = readJson.getString("RESULT");
-                            if (result.equals("OK")) {
-                            Toast.makeText(WiFiSettingsActivity.this, "WIFI OK", Toast.LENGTH_SHORT).show();
+                        if (result.equals("OK")) {
+                            Toast.makeText(WiFiSettingsActivity.this, "The device is connected to WiFi", Toast.LENGTH_SHORT).show();
                             deviceInfor = new DeviceInfor("IOT4U", mac, udid);
                             ArrayList<DeviceInfor> listDevice = (ArrayList<DeviceInfor>) DeviceInforDatabase.getInstance(WiFiSettingsActivity.this).getAllDevice();
                             int listDeviceSize = listDevice.size();
@@ -193,9 +199,12 @@ public class WiFiSettingsActivity extends AppCompatActivity {
                             DeviceInforDatabase.getInstance(WiFiSettingsActivity.this).addDevice(deviceInfor);
 
                         } else if (result.equals("FAILED")) {
-                            Toast.makeText(WiFiSettingsActivity.this, "WIFI FAILED", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WiFiSettingsActivity.this, "WIFI'S SSID OR PASS IS INCORRECT", Toast.LENGTH_SHORT).show();
+                            Log.d("WIFI RESULT", "FAILED");
+
                         } else {
-                            Toast.makeText(WiFiSettingsActivity.this, "UNKNOW RESULT", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WiFiSettingsActivity.this, "UNKNOWN RESULT", Toast.LENGTH_SHORT).show();
+                            Log.d("WIFI RESULT", "UNKNOWN RESULT");
                         }
                     }
                 } catch (JSONException e) {
@@ -232,14 +241,14 @@ public class WiFiSettingsActivity extends AppCompatActivity {
                 //dataIn = dataInputStream.readUTF();
                 Log.d("Dong", dataIn);
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        wifiListShow.setText(dataIn);
-                        //Toast.makeText(WiFiSettingsActivity.this, dataIn, Toast.LENGTH_SHORT).show();
-                        Log.d("DATA-IN", dataIn);
-                    }
-                });
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        wifiListShow.setText(dataIn);
+//                        //Toast.makeText(WiFiSettingsActivity.this, dataIn, Toast.LENGTH_SHORT).show();
+//                        Log.d("DATA-IN", dataIn);
+//                    }
+//                });
 
             } catch (UnknownHostException ignore) {
 

@@ -44,7 +44,6 @@
     <style name="Button_BLUE" parent="Theme.AppCompat">
         <item name="colorButtonNormal">@color/fbutton_color_peter_river</item>
         <item name="colorControlHighlight">@color/colorBlue</item>
-        <item name="dialogCornerRadius">0dp</item>
     </style>
 
     <style name="HDStyle">

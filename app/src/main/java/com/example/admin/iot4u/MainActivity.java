@@ -15,15 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.admin.iot4u.Adapter.DeviceListAdapter;
-import com.example.admin.iot4u.Database.DeviceInfor;
-import com.example.admin.iot4u.Database.DeviceInforDatabase;
 import com.example.admin.iot4u.Fragment.ChatFragment;
 import com.example.admin.iot4u.Fragment.DeviceListFragment;
 import com.example.admin.iot4u.Fragment.ProfileFragment;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
@@ -47,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if(savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new DeviceListFragment(), "Dong").commit();
+                    new DeviceListFragment(), "DeviceList").commit();
             navigationView.setCheckedItem(R.id.nav_deviceList);
         }
 
@@ -120,12 +114,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        updateData();
+        updateDataFromFragment();
     }
 
-    public void updateData() {
+    public void updateDataFromFragment() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        Fragment frag = getSupportFragmentManager().findFragmentByTag("Dong");
+        Fragment frag = getSupportFragmentManager().findFragmentByTag("DeviceList");
         if(frag != null) ft.detach(frag).attach(frag).commit();
 
     }
