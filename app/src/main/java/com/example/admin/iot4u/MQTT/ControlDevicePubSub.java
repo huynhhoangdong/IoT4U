@@ -239,13 +239,6 @@ public class ControlDevicePubSub {
 
                             } else if (status == AWSIotMqttClientStatus.Connected) {
                                 //Toast.makeText(ControlDevicePubSubActivity.this, "Connected", Toast.LENGTH_SHORT).show();
-//                                runOnUiThread(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        //connectToAWS();
-//                                        //subscribeAWSTopic();
-//                                    }
-//                                });
                                 subscribeAWSTopic();
 
                             } else if (status == AWSIotMqttClientStatus.Reconnecting) {
@@ -263,8 +256,6 @@ public class ControlDevicePubSub {
                             }
                         }
                     });
-
-
                 }
             });
         } catch (final Exception e) {
@@ -317,6 +308,16 @@ public class ControlDevicePubSub {
             Toast.makeText(context, msgAWS, Toast.LENGTH_SHORT).show();
             Log.d("AWS", "Publish: " + msgAWS);
             mqttManager.publishString(msgAWS, topicPubAWS, AWSIotMqttQos.QOS0);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "Publish error.", e);
+        }
+    }
+
+    public void publishAWSGetShadow() {
+        final String topGetShadow = "$aws/things/"+udid+"/shadow/get";
+        try {
+            Log.d("AWS", "Publish get shadow" );
+            mqttManager.publishString("{}", topGetShadow, AWSIotMqttQos.QOS0);
         } catch (Exception e) {
             Log.e(LOG_TAG, "Publish error.", e);
         }

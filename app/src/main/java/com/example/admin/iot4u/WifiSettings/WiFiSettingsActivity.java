@@ -1,6 +1,8 @@
 package com.example.admin.iot4u.WifiSettings;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -198,9 +200,30 @@ public class WiFiSettingsActivity extends AppCompatActivity {
                             // Add new device
                             DeviceInforDatabase.getInstance(WiFiSettingsActivity.this).addDevice(deviceInfor);
 
+                            // Go back to previous activity: DeviceList
+                            onBackPressed();
+
                         } else if (result.equals("FAILED")) {
                             Toast.makeText(WiFiSettingsActivity.this, "WIFI'S SSID OR PASS IS INCORRECT", Toast.LENGTH_SHORT).show();
                             Log.d("WIFI RESULT", "FAILED");
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(WiFiSettingsActivity.this);
+                            builder.setTitle("Pairing Failed");
+                            builder.setMessage("Can not receive feedback status");
+                            builder.setCancelable(false);
+                            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            });
+//                            builder.setNegativeButton("Đăng xuất", new DialogInterface.OnClickListener() {
+//                                @Override
+//                                public void onClick(DialogInterface dialogInterface, int i) {
+//                                    dialogInterface.dismiss();
+//                                }
+//                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
 
                         } else {
                             Toast.makeText(WiFiSettingsActivity.this, "UNKNOWN RESULT", Toast.LENGTH_SHORT).show();
